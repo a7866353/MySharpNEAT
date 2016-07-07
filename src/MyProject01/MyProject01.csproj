@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{29120FF9-2405-498A-9D15-C22158A0D704}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MyProject01</RootNamespace>
+    <AssemblyName>MyProject01</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>发布\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MongoDB.Bson, Version=1.9.1.221, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=1.9.1.221, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Agent\RateMarketAgent.cs" />
+    <Compile Include="BasicNet.cs" />
+    <Compile Include="BasicTestCase.cs" />
+    <Compile Include="BasicTestParameterSet.cs" />
+    <Compile Include="BasicTrainingMethod.cs" />
+    <Compile Include="Controller\BasicActor.cs" />
+    <Compile Include="Controller\BasicController.cs" />
+    <Compile Include="Controller\BasicLearnCaseFactory.cs" />
+    <Compile Include="Controller\ControllerPacker.cs" />
+    <Compile Include="DataSources\DataBlock.cs" />
+    <Compile Include="Controller\NewNetworkController.cs" />
+    <Compile Include="Controller\NewTestCase.cs" />
+    <Compile Include="Controller\NewTrainer.cs" />
+    <Compile Include="Controller\SensorList.cs" />
+    <Compile Include="DAO\LearnCaseDAO.cs" />
+    <Compile Include="DAO\NewControllerDAO.cs" />
+    <Compile Include="DataSources\DataSourceCtrl.cs" />
+    <Compile Include="DataSources\DataSourceParams\RateDataSourceParam.cs" />
+    <Compile Include="DataSources\IDataSource.cs" />
+    <Compile Include="DataSources\IDataSourceParam.cs" />
+    <Compile Include="OldController\DataUpdateJob.cs" />
+    <Compile Include="OldController\Jobs\TrainDataChangeJob.cs" />
+    <Compile Include="OldController\KDJFromater.cs" />
+    <Compile Include="DAO\RateDataControlDAO.cs" />
+    <Compile Include="DAO\RateDataDAOList.cs" />
+    <Compile Include="Factorys\ControllerFactorys\BasicControllerFactory.cs" />
+    <Compile Include="Factorys\ControllerFactorys\KdjControllerFactory.cs" />
+    <Compile Include="Factorys\ControllerFactorys\NEATExchangeControllerFactory.cs" />
+    <Compile Include="Factorys\ControllerFactorys\NeatFwtExchangeControllerFactory.cs" />
+    <Compile Include="OldController\IInputDataFormater.cs" />
+    <Compile Include="OldController\IOutputDataConvertor.cs" />
+    <Compile Include="OldController\Jobs\CheckNetworkChangeJob.cs" />
+    <Compile Include="OldController\ICheckJob.cs" />
+    <Compile Include="OldController\Jobs\TrainerContex.cs" />
+    <Compile Include="OldController\Jobs\UpdataControllerJob.cs" />
+    <Compile Include="OldController\Jobs\UpdateTestCaseJob.cs" />
+    <Compile Include="OldController\NetworkController.cs" />
+    <Compile Include="OldController\NEATTrainer.cs" />
+    <Compile Include="OldController\NormalTrainer.cs" />
+    <Compile Include="OldController\SectionChangeTrainer.cs" />
+    <Compile Include="OldController\TradeDecisionController.cs" />
+    <Compile Include="Factorys\TrainerFactorys\FirstTrainerFactory.cs" />
+    <Compile Include="OldController\TrainResultCheckController.cs" />
+    <Compile Include="DAO\ControllerDAO.cs" />
+    <Compile Include="DAO\DataBaseConnector.cs" />
+    <Compile Include="DAO\BasicTestCaseDAO.cs" />
+    <Compile Include="DAO\MongoDBUtility.cs" />
+    <Compile Include="DAO\MyNetDAO.cs" />
+    <Compile Include="ExchangeRateTrade\TradeController.cs" />
+    <Compile Include="Factorys\TrainerFactorys\StepTrainerFactory.cs" />
+    <Compile Include="Factorys\TrainingDataFactorys\RecentDataFactory.cs" />
+    <Compile Include="IControllerFactory.cs" />
+    <Compile Include="InputDataAnalyzerTool\InputDataAnalyzer.cs" />
+    <Compile Include="MyNet.cs" />
+    <Compile Include="MyNetFactory.cs" />
+    <Compile Include="MyNetList.cs" />
+    <Compile Include="Networks\ElmanNet.cs" />
+    <Compile Include="Networks\FeedForwardNet.cs" />
+    <Compile Include="Networks\NEATNet.cs" />
+    <Compile Include="Networks\SimpleFeedForwardNet.cs" />
+    <Compile Include="Factorys\PopulationFactorys\BasicPopulationFactory.cs" />
+    <Compile Include="Factorys\PopulationFactorys\NormalPopulationFactory.cs" />
+    <Compile Include="Reinforcement\QLearn.cs" />
+    <Compile Include="StateSpliter\StateSplitController.cs" />
+    <Compile Include="StateSpliter\ValueSortSpliter.cs" />
+    <Compile Include="TestCaseFactory.cs" />
+    <Compile Include="TestCases\PredictTestCase.cs" />
+    <Compile Include="TestCases\RateMarketNEATBatchTest.cs" />
+    <Compile Include="TestCases\RateMarketNEATTest.cs" />
+    <Compile Include="TestCases\RateMarketTest.cs" />
+    <Compile Include="TestCases\RateMarketTestCases\BasicRateMarketTestCase.cs" />
+    <Compile Include="TestCases\RateMarketTestCases\KDJTestCase.cs" />
+    <Compile Include="TestCases\RateMarketTestCases\NormalRateMarketTestCase.cs" />
+    <Compile Include="TestCases\RateMarketTestCases\StepTrainingTestCase.cs" />
+    <Compile Include="TestParameters\NormalParameterSet.cs" />
+    <Compile Include="Test\DealTest.cs" />
+    <Compile Include="Test\FeedForwardNetworkTest.cs" />
+    <Compile Include="Test\NetworkTest.cs" />
+    <Compile Include="Test\NetworkTestParameter.cs" />
+    <Compile Include="Test\NewTest.cs" />
+    <Compile Include="Test\RateDataCreator.cs" />
+    <Compile Include="Test\ElmanNetworkTest.cs" />
+    <Compile Include="Test\TestData.cs" />
+    <Compile Include="Factorys\TrainerFactorys\BasicTrainerFactory.cs" />
+    <Compile Include="Factorys\TrainingDataFactorys\BasicTrainingDataFactory.cs" />
+    <Compile Include="Factorys\TrainingDataFactorys\OldRateTrainingDataFactory.cs" />
+    <Compile Include="TrainingMethods\BackpropagationTraining.cs" />
+    <Compile Include="TrainingMethods\LevenTraining.cs" />
+    <Compile Include="TrainingMethods\ResilientPropagationTraining.cs" />
+    <Compile Include="Util\BlockDataNormalizer.cs" />
+    <Compile Include="Util\CommonConfig.cs" />
+    <Compile Include="Util\DataNormallizer.cs" />
+    <Compile Include="Util\DataObject\BasicDataBlock.cs" />
+    <Compile Include="Util\DataObject\DataBaseBuffer.cs" />
+    <Compile Include="Util\DataObject\DataBlock.cs" />
+    <Compile Include="Util\DataObject\DataLoader.cs" />
+    <Compile Include="Util\DataObject\IDataBlock.cs" />
+    <Compile Include="Util\DataObject\KDJDataBlock.cs" />
+    <Compile Include="Util\DataSection.cs" />
+    <Compile Include="Util\DllTools\DllMemoryPool.cs" />
+    <Compile Include="Util\DllTools\DllTools.cs" />
+    <Compile Include="Util\IDescriptionProvider.cs" />
+    <Compile Include="Util\LogFile.cs" />
+    <Compile Include="Util\LogWriter.cs" />
+    <Compile Include="Util\MarketRateAnalyzer.cs" />
+    <Compile Include="Util\DataObject\MTData2Loader.cs" />
+    <Compile Include="Util\DataObject\MTDataLoader.cs" />
+    <Compile Include="Util\MyTestData.cs" />
+    <Compile Include="Util\MyTestDataList.cs" />
+    <Compile Include="Util\SlidingFilter.cs" />
+    <Compile Include="Util\View\GraphLine.cs" />
+    <Compile Include="Util\View\GraphMark.cs" />
+    <Compile Include="Util\View\GraphViewer.xaml.cs">
+      <DependentUpon>GraphViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Util\View\PathTest.cs" />
+    <Compile Include="TestCaseWindow.xaml.cs">
+      <DependentUpon>TestCaseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Win\DataBaseViewer.xaml.cs">
+      <DependentUpon>DataBaseViewer.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Util\View\GraphViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestCaseWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Win\DataBaseViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="data.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\encog-core-cs\encog-core-cs.csproj">
+      <Project>{AC6FADF9-0904-4EBD-B22C-1C787C7E7A95}</Project>
+      <Name>encog-core-cs</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Factorys\TestCaseFactorys\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DllTools.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
