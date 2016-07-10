@@ -1,5 +1,4 @@
-﻿using Encog.Neural.NEAT;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using MyProject01.Controller;
 using System;

@@ -1,5 +1,4 @@
-﻿using Encog.ML.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +8,7 @@ namespace MyProject01.Controller
 {
     public interface IActor
     {
-        MarketActions GetAction(IMLData output);
+        MarketActions GetAction(DataBlock output);
         IActor Clone();
         int DataLength { get; }
     }
@@ -17,12 +16,12 @@ namespace MyProject01.Controller
     class BasicActor : IActor
     {
         private MarketActions _lastAction = MarketActions.Nothing;
-        public MarketActions GetAction(IMLData output)
+        public MarketActions GetAction(DataBlock output)
         {
             MarketActions currentAction;
             // Choose an action
             int maxActionIndex = 0;
-            for (int i = 1; i < output.Count; i++)
+            for (int i = 1; i < output.Length; i++)
             {
                 if (output[maxActionIndex] < output[i])
                     maxActionIndex = i;
@@ -77,12 +76,12 @@ namespace MyProject01.Controller
     class StateSwitchActor : IActor
     {
         private MarketActions _lastAction = MarketActions.Nothing;
-        public MarketActions GetAction(IMLData output)
+        public MarketActions GetAction(DataBlock output)
         {
             MarketActions currentAction;
             // Choose an action
             int maxActionIndex = 0;
-            for (int i = 1; i < output.Count; i++)
+            for (int i = 1; i < output.Length; i++)
             {
                 if (output[maxActionIndex] < output[i])
                     maxActionIndex = i;
@@ -133,12 +132,12 @@ namespace MyProject01.Controller
     class StateSwitchWithCloseActor : IActor
     {
         private MarketActions _lastAction = MarketActions.Nothing;
-        public MarketActions GetAction(IMLData output)
+        public MarketActions GetAction(DataBlock output)
         {
             MarketActions currentAction;
             // Choose an action
             int maxActionIndex = 0;
-            for (int i = 1; i < output.Count; i++)
+            for (int i = 1; i < output.Length; i++)
             {
                 if (output[maxActionIndex] < output[i])
                     maxActionIndex = i;

@@ -1,5 +1,4 @@
-﻿using Encog.ML.Data.Basic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +10,7 @@ namespace MyProject01.Controller
     {
         int InputDataLength { get; }
         int ResultDataLength { get; }
-        BasicMLData Convert(double[] rateDataArray);
+        DataBlock Convert(double[] rateDataArray);
         IInputDataFormater Clone();
         string GetDecs();
     }

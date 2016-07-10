@@ -1,5 +1,4 @@
-﻿using Encog.ML.Data.Basic;
-using MyProject01.Util;
+﻿using MyProject01.Util;
 using MyProject01.Util.DataObject;
 using System;
 using System.Collections.Generic;
@@ -131,7 +130,7 @@ namespace MyProject01.Controller
 
             _rateNorm = norm.Normalizer;
         }
-        public BasicMLData Convert(double[] rateDataArray)
+        public DataBlock Convert(double[] rateDataArray)
         {
             MutiplayArraryReader reader = new MutiplayArraryReader(rateDataArray, _blockLength);
 
@@ -153,7 +152,7 @@ namespace MyProject01.Controller
                     + Math.Abs(inputSec.D[i] - inputSec.J[i]);
             }
 
-            return new BasicMLData(_buffer, false);
+            return new DataBlock(_buffer, false);
         }
 
         public IInputDataFormater Clone()
@@ -230,7 +229,7 @@ namespace MyProject01.Controller
             get { return _buffer.Length; }
         }
 
-        public BasicMLData Convert(double[] rateDataArray)
+        public DataBlock Convert(double[] rateDataArray)
         {
             MutiplayArraryReader reader = new MutiplayArraryReader(rateDataArray, _blockLength);
 
@@ -244,7 +243,7 @@ namespace MyProject01.Controller
                     + Math.Abs(reader.Get(2, i) - reader.Get(3, i));
             }
 
-            return new BasicMLData(_buffer, false);
+            return new DataBlock(_buffer, false);
         }
 
         public IInputDataFormater Clone()

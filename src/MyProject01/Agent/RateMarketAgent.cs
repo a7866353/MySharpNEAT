@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MyProject01.Reinforcement;
 using MyProject01.Util.DataObject;
 using MyProject01.Controller;
 using MyProject01.ExchangeRateTrade;

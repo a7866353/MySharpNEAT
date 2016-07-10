@@ -1,9 +1,8 @@
-﻿using Encog.ML;
-using Encog.Neural.NEAT;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using MyProject01.Controller;
+using MyProject01.NeuroNetwork;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -153,19 +152,19 @@ namespace MyProject01.DAO
             ControllerDAO.Remove(this.Name);
         }
 
-        public NEATNetwork GetNetwork()
+        public INeuroNetwork GetNetwork()
         {
             if (NetworkData == null)
                 return null;
 
             MemoryStream stream = new MemoryStream(NetworkData);
             BinaryFormatter formatter = new BinaryFormatter();
-            NEATNetwork obj = (NEATNetwork)formatter.Deserialize(stream);
+            INeuroNetwork obj = (INeuroNetwork)formatter.Deserialize(stream);
 
             return obj;
         }
 
-        public void SetNetwork(IMLRegression net)
+        public void SetNetwork(INeuroNetwork net)
         {
             MemoryStream stream = new MemoryStream();
             BinaryFormatter formatter = new BinaryFormatter();

@@ -1,5 +1,4 @@
-﻿using Encog.Neural.NEAT;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using MyProject01.Agent;

@@ -1,10 +1,4 @@
-﻿using Encog.ML;
-using Encog.ML.Data;
-using Encog.ML.Data.Basic;
-using Encog.ML.EA.Train;
-using Encog.Neural.NEAT;
-using Encog.Neural.Networks.Training;
-using MyProject01.Agent;
+﻿using MyProject01.Agent;
 using MyProject01.Controller.Jobs;
 using MyProject01.DAO;
 using MyProject01.ExchangeRateTrade;

@@ -1,5 +1,4 @@
-﻿using Encog.ML.Data;
-using MyProject01.Agent;
+﻿using MyProject01.Agent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace MyProject01.Controller
 {
     interface IOutputDataConvertor
     {
-        MarketActions Convert(IMLData outData);
+        MarketActions Convert(DataBlock outData);
         int NetworkOutputLength { get; }
         IOutputDataConvertor Clone();
         string GetDesc();

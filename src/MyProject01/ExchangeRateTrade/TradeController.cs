@@ -1,8 +1,4 @@
-﻿using Encog.ML;
-using Encog.ML.Data;
-using Encog.ML.Data.Basic;
-using Encog.Neural.NEAT;
-using MyProject01.Agent;
+﻿using MyProject01.Agent;
 using MyProject01.Controller;
 using System;
 using System.Collections.Generic;

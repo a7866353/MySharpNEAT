@@ -1,4 +1,4 @@
-﻿using Encog.ML;
+﻿using MyProject01.NeuroNetwork;
 using MyProject01.Util;
 using System;
 using System.Collections.Generic;
@@ -21,10 +21,10 @@ namespace MyProject01.Controller
     {
         private ISensor _sensor;
         private IActor _actor;
-        private IMLRegression _neuroNetwork;
+        private INeuroNetwork _neuroNetwork;
         private Normalizer[] _norm;
 
-        public IMLRegression NeuroNetwork
+        public INeuroNetwork NeuroNetwork
         {
             set { _neuroNetwork = value; }
         }
@@ -36,7 +36,7 @@ namespace MyProject01.Controller
             return obj;
         }
 
-        public ControllerPacker(ISensor sensor, IActor actor, IMLRegression net, Normalizer[] norm)
+        public ControllerPacker(ISensor sensor, IActor actor, INeuroNetwork net, Normalizer[] norm)
         {
             _sensor = sensor;
             _actor = actor;

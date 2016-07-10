@@ -108,7 +108,8 @@
     <Compile Include="Controller\BasicController.cs" />
     <Compile Include="Controller\BasicLearnCaseFactory.cs" />
     <Compile Include="Controller\ControllerPacker.cs" />
-    <Compile Include="DataSources\DataBlock.cs" />
+    <Compile Include="DataBlock.cs" />
+    <Compile Include="NeuroNetwork\DataBlock.cs" />
     <Compile Include="Controller\NewNetworkController.cs" />
     <Compile Include="Controller\NewTestCase.cs" />
     <Compile Include="Controller\NewTrainer.cs" />
@@ -119,6 +120,9 @@
     <Compile Include="DataSources\DataSourceParams\RateDataSourceParam.cs" />
     <Compile Include="DataSources\IDataSource.cs" />
     <Compile Include="DataSources\IDataSourceParam.cs" />
+    <Compile Include="NeuroNetwork\BasicNNData.cs" />
+    <Compile Include="NeuroNetwork\INeuroNetwork.cs" />
+    <Compile Include="NeuroNetwork\ITrainer.cs" />
     <Compile Include="OldController\DataUpdateJob.cs" />
     <Compile Include="OldController\Jobs\TrainDataChangeJob.cs" />
     <Compile Include="OldController\KDJFromater.cs" />

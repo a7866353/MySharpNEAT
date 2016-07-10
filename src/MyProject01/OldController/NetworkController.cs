@@ -1,13 +1,6 @@
-﻿using Encog.ML;
-using Encog.ML.Data;
-using Encog.ML.Data.Basic;
-using Encog.ML.EA.Train;
-using Encog.ML.Train.Strategy;
-using Encog.Neural.NEAT;
-using Encog.Neural.Networks.Training;
-using MyProject01.Agent;
+﻿using MyProject01.Agent;
 using MyProject01.DAO;
-using MyProject01.TestCases;
+using MyProject01.NeuroNetwork;
 using MyProject01.Util.DllTools;
 using System;
 using System.Collections.Generic;
@@ -22,7 +15,7 @@ namespace MyProject01.Controller
     public class NetworkController
     {
         private ITradeDesisoin _tradeDecisionController;
-        public IMLRegression BestNetwork;
+        public INeuroNetwork BestNetwork;
 
         private ControllerDAO _dao;
 

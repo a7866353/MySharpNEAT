@@ -1,6 +1,4 @@
-﻿using Encog.ML;
-using Encog.ML.Data;
-using Encog.ML.Data.Basic;
+﻿using MyProject01.NeuroNetwork;
 using MyProject01.Util;
 using MyProject01.Util.DataObject;
 using MyProject01.Util.DllTools;
@@ -58,7 +56,7 @@ namespace MyProject01.Controller
             Buffer = new double[_inputDataLength];
             _tempBuffer = new double[_inputDataLength];
         }
-        public BasicMLData Convert(double[] rateDataArray)
+        public DataBlock Convert(double[] rateDataArray)
         {
             if (Buffer.Length != rateDataArray.Length)
             {
@@ -73,7 +71,7 @@ namespace MyProject01.Controller
             adj.Set(Buffer, 0, Buffer.Length);
             adj.DataValueAdjust(-0.01, 0.01);
 
-            return new BasicMLData(Buffer, false);
+            return new DataBlock(Buffer, false);
         }
 
 
@@ -151,7 +149,7 @@ namespace MyProject01.Controller
             NormalizerArray = norm.NromalizerArray;
         }
 
-        public BasicMLData Convert(double[] rateDataArray)
+        public DataBlock Convert(double[] rateDataArray)
         {
             if (Buffer.Length != rateDataArray.Length)
             {
@@ -166,7 +164,7 @@ namespace MyProject01.Controller
                 Buffer[i] = NormalizerArray[i].Convert(Buffer[i]);
             }
 
-            return new BasicMLData(Buffer, false);
+            return new DataBlock(Buffer, false);
         }
 
 
@@ -208,13 +206,13 @@ namespace MyProject01.Controller
         {
             _inputDataLength = inputDataLength;
         }
-        public BasicMLData Convert(double[] rateDataArray)
+        public DataBlock Convert(double[] rateDataArray)
         {
             for (int i = 0; i < rateDataArray.Length;i++ )
             {
                 rateDataArray[i] = Normalizer.Convert(rateDataArray[i]);
             }
-                return new BasicMLData(rateDataArray, false);
+            return new DataBlock(rateDataArray, false);
         }
         public int NetworkInputLength
         {
@@ -272,12 +270,12 @@ namespace MyProject01.Controller
     [Serializable]
     class TradeStateSwitchConvertor : IOutputDataConvertor
     {
-        public MarketActions Convert(IMLData output)
+        public MarketActions Convert(DataBlock output)
         {
             MarketActions currentAction;
             // Choose an action
             int maxActionIndex = 0;
-            for (int i = 1; i < output.Count; i++)
+            for (int i = 1; i < output.Length; i++)
             {
                 if (output[maxActionIndex] < output[i])
                     maxActionIndex = i;
@@ -324,12 +322,12 @@ namespace MyProject01.Controller
     class TradeStateKeepConvertor : IOutputDataConvertor
     {
         private MarketActions _lastAction = MarketActions.Nothing;
-        public MarketActions Convert(IMLData output)
+        public MarketActions Convert(DataBlock output)
         {
             MarketActions currentAction;
             // Choose an action
             int maxActionIndex = 0;
-            for (int i = 1; i < output.Count; i++)
+            for (int i = 1; i < output.Length; i++)
             {
                 if (output[maxActionIndex] < output[i])
                     maxActionIndex = i;
@@ -383,12 +381,12 @@ namespace MyProject01.Controller
     class TradeStateKeepWithCloseOrderConvertor : IOutputDataConvertor
     {
         private MarketActions _lastAction = MarketActions.Nothing;
-        public MarketActions Convert(IMLData output)
+        public MarketActions Convert(DataBlock output)
         {
             MarketActions currentAction;
             // Choose an action
             int maxActionIndex = 0;
-            for (int i = 1; i < output.Count; i++)
+            for (int i = 1; i < output.Length; i++)
             {
                 if (output[maxActionIndex] < output[i])
                     maxActionIndex = i;
@@ -438,7 +436,7 @@ namespace MyProject01.Controller
     {
         MarketActions GetAction(double[] input);
         ITradeDesisoin Clone();
-        void UpdateNetwork(IMLRegression network);
+        void UpdateNetwork(INeuroNetwork network);
         int InputDataLength { get; }
         int NetworkInputVectorLength { get; }
         int NetworkOutputVectorLenth { get; }
@@ -449,15 +447,15 @@ namespace MyProject01.Controller
     {
         public IInputDataFormater _inputFormater;
         public IOutputDataConvertor _outputConvertor;
-        public IMLRegression BestNetwork;
+        public INeuroNetwork BestNetwork;
 
         public MarketActions GetAction(double[] input)
         {
             if (BestNetwork == null)
                 return MarketActions.Nothing;
-            BasicMLData inData = _inputFormater.Convert(input);
+            DataBlock inData = _inputFormater.Convert(input);
 
-            IMLData output = BestNetwork.Compute(inData);
+            DataBlock output = BestNetwork.Compute(inData);
             MarketActions result = _outputConvertor.Convert(output);
             return result;
         }
@@ -472,7 +470,7 @@ namespace MyProject01.Controller
         }
 
 
-        public void UpdateNetwork(IMLRegression network)
+        public void UpdateNetwork(INeuroNetwork network)
         {
             BestNetwork = network;
         }

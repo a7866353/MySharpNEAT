@@ -1,7 +1,4 @@
-﻿using Encog.ML;
-using Encog.ML.EA.Train;
-using Encog.Neural.NEAT;
-using MyProject01.Util.DataObject;
+﻿using MyProject01.Util.DataObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;

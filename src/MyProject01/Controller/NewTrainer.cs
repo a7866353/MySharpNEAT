@@ -1,7 +1,4 @@
-﻿using Encog.ML.EA.Train;
-using Encog.Neural.NEAT;
-using Encog.Neural.Networks.Training;
-using MyProject01.Controller.Jobs;
+﻿using MyProject01.Controller.Jobs;
 using MyProject01.Factorys.PopulationFactorys;
 using System;
 using System.Collections.Generic;

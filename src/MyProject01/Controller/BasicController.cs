@@ -1,8 +1,6 @@
-﻿using Encog.ML;
-using Encog.ML.Data;
-using Encog.ML.Data.Basic;
-using MyProject01.DataSources;
+﻿using MyProject01.DataSources;
 using MyProject01.DataSources.DataSourceParams;
+using MyProject01.NeuroNetwork;
 using MyProject01.Util;
 using System;
 using System.Collections.Generic;
@@ -15,7 +13,7 @@ namespace MyProject01.Controller
     public interface IController
     {
         DataSourceCtrl DataSourceCtrl { set; }
-        void UpdateNetwork(IMLRegression network);
+        void UpdateNetwork(INeuroNetwork network);
 
         int SkipCount { get; }
         int TotalLength { get; }
@@ -55,20 +53,18 @@ namespace MyProject01.Controller
         private IActor _actor;
         private Normalizer[] _normalizerArray;
 
-        private BasicMLData _inData;
-        private DataBlock _inDataArr;
+        private DataBlock _inData;
         private int _currentPosition;
 
         private DataSourceCtrl _dataSourceCtrl;
-        private IMLRegression _neuroNetwork;
+        private INeuroNetwork _neuroNetwork;
         private IDataSource _dataSource;
         public BasicController(ISensor sensor, IActor actor)
         {
             _sensor = sensor;
             _actor = actor;
             _currentPosition = 0;
-            _inDataArr = new DataBlock(NetworkInputVectorLength);
-            _inData = new BasicMLData(_inDataArr.Data, false);
+            _inData = new DataBlock(NetworkInputVectorLength);
         }
 
         public int SkipCount
@@ -99,21 +95,21 @@ namespace MyProject01.Controller
 
         public MarketActions GetAction()
         {
-            _sensor.Copy(_currentPosition, _inDataArr, 0);
+            _sensor.Copy(_currentPosition, _inData, 0);
             
             // Normalize
-            for(int i=0;i<_inDataArr.Length;i++)
+            for (int i = 0; i < _inData.Length; i++)
             {
-                _inDataArr[i] = _normalizerArray[i].Convert(_inDataArr[i]);
+                _inData[i] = _normalizerArray[i].Convert(_inData[i]);
             }
 
-            IMLData output = _neuroNetwork.Compute(_inData);
+            DataBlock output = _neuroNetwork.Compute(_inData);
 
             MarketActions result = _actor.GetAction(output);
             return result;
         }
 
-        public void UpdateNetwork(IMLRegression network)
+        public void UpdateNetwork(INeuroNetwork network)
         {
             _neuroNetwork = network;
         }
@@ -135,8 +131,7 @@ namespace MyProject01.Controller
             ctrl._actor = _actor.Clone();
             // ctrl._normalizerArray = _normalizerArray.Clone() as Normalizer[];
 
-            _inDataArr = new DataBlock(NetworkInputVectorLength);
-            _inData = new BasicMLData(_inDataArr.Data, false);
+            _inData = new DataBlock(NetworkInputVectorLength);
             _currentPosition = _sensor.SkipCount;
             return ctrl;
         }
@@ -211,7 +206,7 @@ namespace MyProject01.Controller
         private int _currentPosition;
 
         private DataSourceCtrl _dataSourceCtrl;
-        private IMLRegression _neuroNetwork;
+        private INeuroNetwork _neuroNetwork;
         private IDataSource _dataSource;
 
         private DataBlock[] _inDataCache;
@@ -254,16 +249,15 @@ namespace MyProject01.Controller
 
         public virtual MarketActions GetAction()
         {
-            DataBlock inDataArr = _inDataCache[_currentPosition];
-            BasicMLData inData = new BasicMLData(inDataArr.Data, false);
+            DataBlock inData = _inDataCache[_currentPosition];
 
-            IMLData output = _neuroNetwork.Compute(inData);
+            DataBlock output = _neuroNetwork.Compute(inData);
 
             MarketActions result = _actor.GetAction(output);
             return result;
         }
 
-        public void UpdateNetwork(IMLRegression network)
+        public void UpdateNetwork(INeuroNetwork network)
         {
             _neuroNetwork = network;
         }

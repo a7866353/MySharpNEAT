@@ -1,6 +1,4 @@
-﻿using Encog.ML.EA.Genome;
-using Encog.Neural.NEAT;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +13,7 @@ namespace MyProject01.Controller.Jobs
         private byte[] LastNetData;
         public bool Do(TrainerContex context)
         {
+            // TODO
             NEATNetwork episodeNet = (NEATNetwork)context.trainEA.CODEC.Decode(context.trainEA.BestGenome);
             byte[] netData = NetworkToByte(episodeNet);
             if (ByteArrayCompare(netData, LastNetData) == false)

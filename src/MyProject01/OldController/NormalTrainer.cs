@@ -10,12 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MyProject01.Controller.Jobs;
 using MyProject01.Util;
-using Encog.Neural.Networks.Training;
-using Encog.ML;
 using MyProject01.Factorys.PopulationFactorys;
-using Encog.ML.Data;
 using MyProject01.Util.DllTools;
-using Encog.ML.EA.Train;
+using MyProject01.NeuroNetwork;
 
 namespace MyProject01.Controller
 {
@@ -92,9 +89,9 @@ namespace MyProject01.Controller
 #if true
             // NetworkDllTools dllNet = new NetworkDllTools((NEATNetwork)network);
             NetworkFloatDllTools dllNet = new NetworkFloatDllTools((NEATNetwork)network);
-            decisionCtrl.UpdateNetwork((IMLRegression)dllNet);
+            decisionCtrl.UpdateNetwork((INeuroNetwork)dllNet);
 #else
-            decisionCtrl.UpdateNetwork((IMLRegression)network);
+            decisionCtrl.UpdateNetwork((INeuroNetwork)network);
 #endif
             TradeController tradeCtrl = new TradeController(agent, decisionCtrl);
             while (true)
@@ -153,7 +150,7 @@ namespace MyProject01.Controller
         {
             RateMarketAgent agent = new RateMarketAgent(_dataBlock.GetNewBlock(StartIndex, Length));
             ITradeDesisoin decisionCtrl = TradeDecisionCtrl.Clone();
-            decisionCtrl.UpdateNetwork((IMLRegression)network);
+            decisionCtrl.UpdateNetwork((INeuroNetwork)network);
             TradeController tradeCtrl = new TradeController(agent, decisionCtrl);
             while (true)
             {
@@ -175,14 +172,14 @@ namespace MyProject01.Controller
 
     }
 
-    class CNeatNetwork : IMLRegression
+    class CNeatNetwork : INeuroNetwork
     {
         public CNeatNetwork(NEATNetwork network)
         {
             
         }
 
-        public IMLData Compute(Encog.ML.Data.IMLData input)
+        public DataBlock Compute(Encog.ML.Data.DataBlock input)
         {
             throw new NotImplementedException();
         }

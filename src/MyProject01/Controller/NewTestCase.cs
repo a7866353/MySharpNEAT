@@ -1,10 +1,8 @@
-﻿using Encog.ML;
-using Encog.Neural.NEAT;
-using Encog.Neural.Networks.Training;
-using MyProject01.Agent;
+﻿using MyProject01.Agent;
 using MyProject01.Controller.Jobs;
 using MyProject01.DAO;
 using MyProject01.Factorys.PopulationFactorys;
+using MyProject01.NeuroNetwork;
 using MyProject01.Util;
 using MyProject01.Util.DllTools;
 using System;
@@ -199,7 +197,7 @@ namespace MyProject01.Controller
         public double CalculateScore(IMLMethod network)
         {
             IController ctrl = _ctrlFactory.Get();
-            ctrl.UpdateNetwork((IMLRegression)network);
+            ctrl.UpdateNetwork((INeuroNetwork)network);
             LearnRateMarketAgent agent = new LearnRateMarketAgent(ctrl);
             agent.SetRange(StartPosition, StartPosition + _trainDataLength);
 
