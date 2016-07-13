@@ -15,6 +15,8 @@ namespace MyProject01.Controller
         DataSourceCtrl DataSourceCtrl { set; }
         void UpdateNetwork(INeuroNetwork network);
 
+        int InputVectorLength { get; }
+        int OutputVectorLength { get; }
         int SkipCount { get; }
         int TotalLength { get; }
         int CurrentPosition { get; set; }
@@ -195,6 +197,17 @@ namespace MyProject01.Controller
         {
             return _dataSourceCtrl.SourceLoader[pos];
         }
+
+
+        public int InputVectorLength
+        {
+            get { return _sensor.DataBlockLength; }
+        }
+
+        public int OutputVectorLength
+        {
+            get { return _actor.DataLength; }
+        }
     }
 
     class BasicControllerWithCache : IController
@@ -262,16 +275,6 @@ namespace MyProject01.Controller
             _neuroNetwork = network;
         }
 
-        public int NetworkInputVectorLength
-        {
-            get { return _sensor.DataBlockLength; }
-        }
-
-        public int NetworkOutputVectorLenth
-        {
-            get { return _actor.DataLength; }
-        }
-
         public IController Clone()
         {
             BasicControllerWithCache ctrl = (BasicControllerWithCache)MemberwiseClone();
@@ -308,7 +311,7 @@ namespace MyProject01.Controller
         public void Normilize(double middleValue, double limit)
         {
             FwtDataNormalizer norm = new FwtDataNormalizer();
-            DataBlock buffer = new DataBlock(NetworkInputVectorLength);
+            DataBlock buffer = new DataBlock(InputVectorLength);
 
             int startPos = Math.Max(_sensor.SkipCount, StartPosition);
 
@@ -328,7 +331,7 @@ namespace MyProject01.Controller
             _inDataCache = new DataBlock[TotalLength];
             for (int i = startPos; i < TotalLength; i++)
             {
-                buffer = new DataBlock(NetworkInputVectorLength);
+                buffer = new DataBlock(InputVectorLength);
                 _sensor.Copy(i, buffer, 0);
                 for (int j = 0; j < buffer.Length; j++)
                 {
@@ -358,6 +361,15 @@ namespace MyProject01.Controller
         public RateSet GetRateSet(int pos)
         {
             return _dataSourceCtrl.SourceLoader[pos];
+        }
+        public int InputVectorLength
+        {
+            get { return _sensor.DataBlockLength; }
+        }
+
+        public int OutputVectorLength
+        {
+            get { return _actor.DataLength; }
         }
     }
 

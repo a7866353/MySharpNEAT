@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MyProject01</RootNamespace>
     <AssemblyName>MyProject01</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -109,7 +109,6 @@
     <Compile Include="Controller\BasicLearnCaseFactory.cs" />
     <Compile Include="Controller\ControllerPacker.cs" />
     <Compile Include="DataBlock.cs" />
-    <Compile Include="NeuroNetwork\DataBlock.cs" />
     <Compile Include="Controller\NewNetworkController.cs" />
     <Compile Include="Controller\NewTestCase.cs" />
     <Compile Include="Controller\NewTrainer.cs" />
@@ -123,7 +122,7 @@
     <Compile Include="NeuroNetwork\BasicNNData.cs" />
     <Compile Include="NeuroNetwork\INeuroNetwork.cs" />
     <Compile Include="NeuroNetwork\ITrainer.cs" />
-    <Compile Include="OldController\DataUpdateJob.cs" />
+    <Compile Include="OldController\Jobs\DataUpdateJob.cs" />
     <Compile Include="OldController\Jobs\TrainDataChangeJob.cs" />
     <Compile Include="OldController\KDJFromater.cs" />
     <Compile Include="DAO\RateDataControlDAO.cs" />
@@ -279,13 +278,18 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\encog-core-cs\encog-core-cs.csproj">
-      <Project>{AC6FADF9-0904-4EBD-B22C-1C787C7E7A95}</Project>
-      <Name>encog-core-cs</Name>
+    <ProjectReference Include="..\SharpNeatDomains\SharpNeatDomains.csproj">
+      <Project>{73ab8c8c-6315-4dc7-a3de-3c747f86ac78}</Project>
+      <Name>SharpNeatDomains</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpNeatLib\SharpNeatLib.csproj">
+      <Project>{abc5c77a-deba-420c-926c-bd3e6f37ae15}</Project>
+      <Name>SharpNeatLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Factorys\TestCaseFactorys\" />
+    <Folder Include="SharpNEATDomain\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

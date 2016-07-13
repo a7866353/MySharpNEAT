@@ -1,7 +1,6 @@
 ﻿using MyProject01.Agent;
 using MyProject01.Controller.Jobs;
 using MyProject01.DAO;
-using MyProject01.Factorys.PopulationFactorys;
 using MyProject01.NeuroNetwork;
 using MyProject01.Util;
 using MyProject01.Util.DllTools;
@@ -168,61 +167,9 @@ namespace MyProject01.Controller
             return loader;
         }
     }
-    public class NewNormalScore : ICalculateScore
-    {
-        public ControllerFactory _ctrlFactory;
-        public int StartPosition = 50000;
-        public int TrainDataLength
-        {
-            get { return _trainDataLength; }
-        }
-
-        private int _trainDataLength;
-
-        public NewNormalScore(ControllerFactory ctrlFactory, int trainDataLength)
-        {
-            _ctrlFactory = ctrlFactory;
-            _trainDataLength = trainDataLength;
-        }
-
-        public bool ShouldMinimize
-        {
-            get { return false; }
-        }
-        public bool RequireSingleThreaded
-        {
-            get { return false; }
-        }
-
-        public double CalculateScore(IMLMethod network)
-        {
-            IController ctrl = _ctrlFactory.Get();
-            ctrl.UpdateNetwork((INeuroNetwork)network);
-            LearnRateMarketAgent agent = new LearnRateMarketAgent(ctrl);
-            agent.SetRange(StartPosition, StartPosition + _trainDataLength);
-
-            while (true)
-            {
-                if (agent.IsEnd == true)
-                    break;
-
-                agent.DoAction();
-                agent.Next();
-                if (agent.IsEnd == true)
-                    break;
-            }
-            //            System.Console.WriteLine("S: " + agent.CurrentValue);
-            double score = agent.CurrentValue - agent.InitMoney;
-            // System.Console.WriteLine("S: " + score);
-            // return score;
-            _ctrlFactory.Free(ctrl);
-
-            return agent.CurrentValue;
-        }
-
-    }
     class NewUpdateControllerJob : ICheckJob
     {
+#if false
         private ControllerPacker _packer;
         private string _caseName;
         public NewUpdateControllerJob(string caseName, ControllerPacker packer)
@@ -249,6 +196,11 @@ namespace MyProject01.Controller
             context.ControllerName = dao.Name;
 
             return true;
+        }
+#endif
+        public bool Do(TrainerContex context)
+        {
+            throw new NotImplementedException();
         }
     }
     class NewUpdateTestCaseJob : ICheckJob
@@ -352,7 +304,7 @@ namespace MyProject01.Controller
             epsodeLog.UnTrainedDataEarnRate = (endMoney / trainedMoney) * 100;
             epsodeLog.TrainedDealCount = trainDealCount;
             epsodeLog.UntrainedDealCount = agent.DealCount - trainDealCount;
-            epsodeLog.HidenNodeCount = network.Links.Length;
+            // epsodeLog.HidenNodeCount = network.Links.Length;
             epsodeLog.ResultMoney = endMoney;
             epsodeLog.Step = _epoch;
             epsodeLog.ControllerName = _context.ControllerName;
@@ -411,18 +363,12 @@ namespace MyProject01.Controller
             trainCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader); // TODO
             _ctrlFac = new ControllerFactory(trainCtrl);
 
-            _score = new NewNormalScore(_ctrlFac, Math.Min(_trainDataLength, _trainBlockLength))
-                {
-                    StartPosition = _startPosition
-                };
 
-            NewTrainer trainer = new NewTrainer(_testCtrl.NetworkInputVectorLength,
-                _testCtrl.NetworkOutputVectorLenth);
+
+            Trainer trainer = new Trainer(_ctrlFac);
 
             trainer.CheckCtrl = CreateCheckCtrl();
             trainer.TestName = "";
-            trainer.PopulationFacotry = new NormalPopulationFactory() { PopulationNumber = CommonConfig.PopulationSize };
-            trainer.ScoreCtrl = _score;
            
             trainer.RunTestCase();
         }
@@ -430,8 +376,8 @@ namespace MyProject01.Controller
         private ICheckJob CreateCheckCtrl()
         {
             TrainResultCheckSyncController mainCheckCtrl = new TrainResultCheckSyncController();
-            mainCheckCtrl.Add(new CheckNetworkChangeJob());
-            mainCheckCtrl.Add(new NewUpdateControllerJob(TestCaseName, _testCtrl.GetPacker()));
+            // mainCheckCtrl.Add(new CheckNetworkChangeJob());
+            // mainCheckCtrl.Add(new NewUpdateControllerJob(TestCaseName, _testCtrl.GetPacker()));
 
             // TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
             // subCheckCtrl.Add(new UpdateTestCaseJob() 

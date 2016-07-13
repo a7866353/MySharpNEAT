@@ -1,5 +1,4 @@
-﻿using Encog.Neural.NEAT;
-using MyProject01.Agent;
+﻿using MyProject01.Agent;
 using MyProject01.DAO;
 using MyProject01.ExchangeRateTrade;
 using MyProject01.Util;
@@ -107,7 +106,7 @@ namespace MyProject01.Controller.Jobs
             epsodeLog.UnTrainedDataEarnRate = (endMoney / trainedMoney) * 100;
             epsodeLog.TrainedDealCount = trainDealCount;
             epsodeLog.UntrainedDealCount = agent.DealCount - trainDealCount;
-            epsodeLog.HidenNodeCount = network.Links.Length;
+            // epsodeLog.HidenNodeCount = network.Links.Length;
             epsodeLog.ResultMoney = endMoney;
             epsodeLog.Step = _epoch;
             epsodeLog.Save();

@@ -10,5 +10,8 @@ namespace MyProject01.NeuroNetwork
     {
         void Initial();
         void RunTestCase();
+        long Epoch { get; }
+        string Name { get; }
+
     }
 }

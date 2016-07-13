@@ -22,7 +22,6 @@ namespace MyProject01.Controller.Jobs
         public BasicDataBlock _trainDataBlock;
 
         // TestCase
-        public TrainEA trainEA;
 
         public NEATNetwork BestNetwork;
 

@@ -101,17 +101,6 @@ namespace MyProject01.DAO
         {
             return new RateMarketTestEpisodeDAO(this);
         }
-        public NEATPopulation GetPopulation()
-        {
-            NEATPopulation pop = MongoDBUtility.GetFromFS<NEATPopulation>(new TestCaseDatabaseConnector(), TestCaseName);
-            return pop;
-
-        }
-        public void UpdatePopulation(NEATPopulation pop)
-        {
-            MongoDBUtility.SaveToFS<NEATPopulation>(new TestCaseDatabaseConnector(), pop, TestCaseName);
-        }
-
 
 
     }

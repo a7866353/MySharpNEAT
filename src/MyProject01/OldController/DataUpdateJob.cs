@@ -10,6 +10,8 @@ namespace MyProject01.Controller
 
     class DataUpdateJob : ICheckJob
     {
+
+#if false
         private ReduceLossScore _score;
         private int _stepLength = 2;
         private BasicDataBlock _trainDataBlock;
@@ -51,6 +53,11 @@ namespace MyProject01.Controller
             _startIndex += _stepLength;
             if ((_startIndex + _trainLength) >= _trainDataBlock.BlockCount)
                 _startIndex = 0;
+        }
+#endif
+        public bool Do(Jobs.TrainerContex context)
+        {
+            throw new NotImplementedException();
         }
     }
 }
