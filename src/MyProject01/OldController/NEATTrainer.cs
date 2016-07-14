@@ -117,7 +117,7 @@ namespace MyProject01.Controller
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
     }
 
@@ -169,6 +169,21 @@ namespace MyProject01.Controller
         {
             _ctrlFactory = ctrlFactory;
 
+            _trainDataLength = _ctrlFactory.BaseController.TotalLength;
+
+            _name = "SharpNEAT";
+            _populationSize = CommonConfig.PopulationSize;
+            _specieCount = 10;
+            _activationScheme = NetworkActivationScheme.CreateCyclicFixedTimestepsScheme(1);
+            _complexityRegulationStr = "Absolute";
+            _complexityThreshold = 10;
+            _description = "SharpNEAT Test";
+            _parallelOptions = new ParallelOptions();
+
+            _eaParams = new NeatEvolutionAlgorithmParameters();
+            _eaParams.SpecieCount = _specieCount;
+            _neatGenomeParams = new NeatGenomeParameters();
+            // _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
         }
 
         public void Initialize(string name, XmlElement xmlConfig)
@@ -186,6 +201,8 @@ namespace MyProject01.Controller
             _eaParams.SpecieCount = _specieCount;
             _neatGenomeParams = new NeatGenomeParameters();
             _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
+            _neatGenomeParams.InitialInterconnectionsProportion = 0.1;
+
 
         }
         public void RunTestCase()

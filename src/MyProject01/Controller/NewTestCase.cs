@@ -367,7 +367,7 @@ namespace MyProject01.Controller
 
             Trainer trainer = new Trainer(_ctrlFac);
 
-            trainer.CheckCtrl = CreateCheckCtrl();
+            // trainer.CheckCtrl = CreateCheckCtrl();
             trainer.TestName = "";
            
             trainer.RunTestCase();

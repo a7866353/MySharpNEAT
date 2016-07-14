@@ -122,7 +122,7 @@
     <Compile Include="NeuroNetwork\BasicNNData.cs" />
     <Compile Include="NeuroNetwork\INeuroNetwork.cs" />
     <Compile Include="NeuroNetwork\ITrainer.cs" />
-    <Compile Include="OldController\Jobs\DataUpdateJob.cs" />
+    <Compile Include="OldController\DataUpdateJob.cs" />
     <Compile Include="OldController\Jobs\TrainDataChangeJob.cs" />
     <Compile Include="OldController\KDJFromater.cs" />
     <Compile Include="DAO\RateDataControlDAO.cs" />
