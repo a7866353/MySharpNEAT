@@ -24,6 +24,7 @@ namespace MyProject01.Controller.Jobs
         // TestCase
 
         public NEATNetwork BestNetwork;
+        public double Fitness;
 
         public TrainerContex()
         {

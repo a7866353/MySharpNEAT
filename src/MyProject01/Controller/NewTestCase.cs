@@ -217,6 +217,7 @@ namespace MyProject01.Controller
         private int _testStartIndex;
         private long _epoch;
         private LogFormater _log;
+        private double _lastFitness;
 
         private TrainerContex _context;
         public NewUpdateTestCaseJob()
@@ -224,11 +225,13 @@ namespace MyProject01.Controller
             _log = new LogFormater();
             LogFile.WriteLine(_log.GetTitle());
             _testCaseDAO = null;
+            _lastFitness = 0;
         }
         public bool Do(TrainerContex context)
         {
-            if (context.IsChanged == false)
+            if (_lastFitness == context.Fitness)
                 return true;
+            _lastFitness = context.Fitness;
 
             _context = context;
             if (_testCaseDAO == null)
@@ -367,7 +370,7 @@ namespace MyProject01.Controller
 
             Trainer trainer = new Trainer(_ctrlFac);
 
-            // trainer.CheckCtrl = CreateCheckCtrl();
+            trainer.CheckCtrl = CreateCheckCtrl();
             trainer.TestName = "";
            
             trainer.RunTestCase();
@@ -398,7 +401,7 @@ namespace MyProject01.Controller
             });
 
             // mainCheckCtrl.Add(subCheckCtrl);
-            mainCheckCtrl.Add(new TrainDataChangeJob(_score, _startPosition, _trainDataLength, _trainBlockLength / 4));
+            // mainCheckCtrl.Add(new TrainDataChangeJob(_score, _startPosition, _trainDataLength, _trainBlockLength / 4));
             return mainCheckCtrl;
 
         }
