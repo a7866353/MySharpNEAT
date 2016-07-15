@@ -331,12 +331,62 @@ namespace MyProject01.Controller
 
     }
 
+   
+    public class AgentFactory
+    {
+        private ControllerFactory _ctrlFactory;
+        private int _startPositon;
+        private int _trainDataLength;
+
+        public AgentFactory(ControllerFactory ctrlFactory)
+        {
+            _ctrlFactory = ctrlFactory;
+            _startPositon = _ctrlFactory.BaseController.CurrentPosition;
+            _trainDataLength = _ctrlFactory.BaseController.TotalLength;
+        }
+        public int StartPosition
+        {
+            set { _startPositon = value; }
+        }
+        public int TrainDataLength
+        {
+            set { _trainDataLength = value; }
+        }
+        public IController BaseController
+        {
+            get { return _ctrlFactory.BaseController; }
+        }
+        public double Run(NEATNetwork net)
+        {
+            double result;
+            IController ctrl = _ctrlFactory.Get();
+
+            ctrl.UpdateNetwork(net);
+            LearnRateMarketAgent agent = new LearnRateMarketAgent(ctrl);
+            agent.SetRange(_startPositon, _startPositon + _trainDataLength);
+            while (true)
+            {
+                if (agent.IsEnd == true)
+                    break;
+
+                agent.DoAction();
+                agent.Next();
+                if (agent.IsEnd == true)
+                    break;
+            }
+
+            _ctrlFactory.Free(ctrl);
+
+            result = agent.CurrentValue;
+            return result;
+        }
+    }
     abstract class BasicNewTestCase
     {
         private ControllerFactory _ctrlFac;
         private BasicControllerWithCache _testCtrl;
         private BasicTestDataLoader _loader;
-        private NewNormalScore _score;
+        private AgentFactory _agentFac;
 
         private double _testRate = 0.7;
         private int _startPosition = 50000;
@@ -367,8 +417,11 @@ namespace MyProject01.Controller
             _ctrlFac = new ControllerFactory(trainCtrl);
 
 
+            _agentFac = new AgentFactory(_ctrlFac);
+            _agentFac.StartPosition = _startPosition;
+            _agentFac.TrainDataLength = _trainBlockLength;
 
-            Trainer trainer = new Trainer(_ctrlFac);
+            Trainer trainer = new Trainer(_agentFac);
 
             trainer.CheckCtrl = CreateCheckCtrl();
             trainer.TestName = "";
@@ -401,7 +454,7 @@ namespace MyProject01.Controller
             });
 
             // mainCheckCtrl.Add(subCheckCtrl);
-            // mainCheckCtrl.Add(new TrainDataChangeJob(_score, _startPosition, _trainDataLength, _trainBlockLength / 4));
+            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4));
             return mainCheckCtrl;
 
         }

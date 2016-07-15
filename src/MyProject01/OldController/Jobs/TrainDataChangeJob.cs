@@ -8,7 +8,7 @@ namespace MyProject01.Controller.Jobs
 {
     class TrainDataChangeJob : ICheckJob
     {
-        private NewNormalScore _score;
+        private AgentFactory _agentFac;
         private int _startPosition;
         private int _stepOffset;
         private int _maxPos;
@@ -16,14 +16,14 @@ namespace MyProject01.Controller.Jobs
 
         private int _currentStartPos;
 
-        public TrainDataChangeJob(NewNormalScore score, int startPos, int len, int stepOffset)
+        public TrainDataChangeJob(AgentFactory agentFac, int startPos, int len, int stepOffset)
         {
-            _score = score;
+            _agentFac = agentFac;
             _startPosition = startPos;
             _stepOffset = stepOffset;
 
             _currentStartPos = _startPosition;
-            _maxPos = Math.Max(_startPosition + len - score.TrainDataLength, _startPosition);
+            _maxPos = _startPosition + len;
         }
         public bool Do(TrainerContex context)
         {
@@ -39,7 +39,7 @@ namespace MyProject01.Controller.Jobs
                 _currentStartPos = Math.Min(_currentStartPos + _stepOffset, _maxPos);
             }
 
-            _score.StartPosition = _currentStartPos;
+            _agentFac.StartPosition = _currentStartPos;
 
             return true;
         }

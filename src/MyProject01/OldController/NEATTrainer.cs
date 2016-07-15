@@ -27,7 +27,7 @@ using System.Xml;
 namespace MyProject01.Controller
 {
 
-    class NEATNetwork : INeuroNetwork
+    public class NEATNetwork : INeuroNetwork
     {
         private IBlackBox _blockBox;
         private DataBlock _result;
@@ -55,20 +55,14 @@ namespace MyProject01.Controller
     }
     public class NewNormalScore : IPhenomeEvaluator<IBlackBox>
     {
-        public ControllerFactory _ctrlFactory;
-        public int StartPosition = 50000;
-        public int TrainDataLength
-        {
-            get { return _trainDataLength; }
-        }
+        public AgentFactory _agentFactory;
 
-        private int _trainDataLength;
+
         private ulong _evalCount;
 
-        public NewNormalScore(ControllerFactory ctrlFactory, int trainDataLength)
+        public NewNormalScore(AgentFactory agentFactory)
         {
-            _ctrlFactory = ctrlFactory;
-            _trainDataLength = trainDataLength;
+            _agentFactory = agentFactory;
             _evalCount = 0;
         }
 
@@ -88,30 +82,7 @@ namespace MyProject01.Controller
             double fitness = 0;
 
             _evalCount++;
-            IController ctrl = _ctrlFactory.Get();
-
-            ctrl.UpdateNetwork(new NEATNetwork(phenome));
-            LearnRateMarketAgent agent = new LearnRateMarketAgent(ctrl);
-            agent.SetRange(StartPosition, StartPosition + _trainDataLength);
-
-            while (true)
-            {
-                if (agent.IsEnd == true)
-                    break;
-
-                agent.DoAction();
-                agent.Next();
-                if (agent.IsEnd == true)
-                    break;
-            }
-            //            System.Console.WriteLine("S: " + agent.CurrentValue);
-            double score = agent.CurrentValue - agent.InitMoney;
-            // System.Console.WriteLine("S: " + score);
-            // return score;
-            _ctrlFactory.Free(ctrl);
-
-
-            fitness = agent.CurrentValue;
+            fitness = _agentFactory.Run(new NEATNetwork(phenome));
             return new FitnessInfo(fitness, fitness);
         }
 
@@ -131,13 +102,8 @@ namespace MyProject01.Controller
         public string TestName = "DefaultTest000";
         public ICheckJob CheckCtrl;
 
-        private double _testRate = 0.7;
-        private int _startPosition = 50000;
-        private int _trainBlockLength = 4096;
-        
+      
         private long _epoch;
-        private int _trainDataLength;
-        private int _testDataLength;
 
 
         NeatEvolutionAlgorithmParameters _eaParams;
@@ -150,7 +116,7 @@ namespace MyProject01.Controller
         string _name;
         int _specieCount;
 
-        ControllerFactory _ctrlFactory;
+        AgentFactory _agentFactory;
         int _populationSize;
 
         private NeatEvolutionAlgorithm<NeatGenome> _ea;
@@ -166,11 +132,9 @@ namespace MyProject01.Controller
             _inVecLen = inVectorLength;
             _outVecLen = outVectorLength;
         }
-        public Trainer(ControllerFactory ctrlFactory)
+        public Trainer(AgentFactory agentFactory)
         {
-            _ctrlFactory = ctrlFactory;
-
-            _trainDataLength = _ctrlFactory.BaseController.TotalLength;
+            _agentFactory = agentFactory;
 
             _name = "SharpNEAT";
             _populationSize = CommonConfig.PopulationSize;
@@ -232,8 +196,8 @@ namespace MyProject01.Controller
         public IGenomeFactory<NeatGenome> CreateGenomeFactory()
         {
             return new NeatGenomeFactory(
-                _ctrlFactory.BaseController.InputVectorLength, 
-                _ctrlFactory.BaseController.OutputVectorLength, 
+                _agentFactory.BaseController.InputVectorLength, 
+                _agentFactory.BaseController.OutputVectorLength, 
                 _neatGenomeParams
                 );
         }
@@ -265,10 +229,7 @@ namespace MyProject01.Controller
             NeatEvolutionAlgorithm<NeatGenome> ea = new NeatEvolutionAlgorithm<NeatGenome>(_eaParams, speciationStrategy, complexityRegulationStrategy);
 
             // Create IBlackBox evaluator.
-            NewNormalScore evaluator = new NewNormalScore(_ctrlFactory, Math.Min(_trainDataLength, _trainBlockLength))
-            {
-                StartPosition = _startPosition
-            };
+            NewNormalScore evaluator = new NewNormalScore(_agentFactory);
 
             // Create genome decoder.
             _genomeDecoder = CreateGenomeDecoder();
