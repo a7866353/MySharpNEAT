@@ -415,7 +415,7 @@ namespace MyProject01.Controller
        
         private int _dataCollectLength = 4;
         private WaveletFunction _wavelet;
-
+#if false
         private int CopyResult(DataBlock resultBuf, DataBlock outBuf, int len)
         {
             int blockLength = _dataCount;
@@ -452,7 +452,41 @@ namespace MyProject01.Controller
                 copyOffset += blockLength * 2;
             }
         }
-        public RateWaveletSensor(int dataCount, BasicWavelet waveletFunc, int dataCollectLength=4)
+#else
+        private int CopyResult(DataBlock resultBuf, DataBlock outBuf, int len)
+        {
+            int blockLength = _dataCount;
+            int outPos = 0;
+            int copyOffset = 0;
+            int copyLen;
+            while (true)
+            {
+                if (blockLength == 1)
+                    return outPos;
+                if (blockLength % 2 != 0)
+                {
+                    throw (new Exception("Param error!"));
+                }
+                blockLength /= 2;
+                if (blockLength < len)
+                {
+                    copyLen = blockLength;
+                }
+                else
+                {
+                    copyLen = len;
+                }
+                int staPos = blockLength - copyLen;
+
+                if (outBuf != null)
+                    resultBuf.CopyTo(copyOffset + blockLength + staPos, outBuf, outPos, copyLen);
+                outPos += copyLen;
+
+                copyOffset += blockLength ;
+            }
+        }
+#endif
+        public RateWaveletSensor(int dataCount, BasicWavelet waveletFunc, int dataCollectLength = 4)
         {
 
             _wavelet = new WaveletFunction(waveletFunc);
@@ -536,6 +570,138 @@ namespace MyProject01.Controller
             return sen;
         }
     }
+    [Serializable]
+    class WaveletSensor : ISensor
+    {
+        private ISensor _source;
+        private int _dataCount;
+        private int _index;
+        private int _outputCount;
+
+        private int _dataCollectLength = 4;
+        private WaveletFunction _wavelet;
+
+        private int CopyResult(DataBlock resultBuf, DataBlock outBuf, int len)
+        {
+            int blockLength = _dataCount;
+            int outPos = 0;
+            int copyOffset = 0;
+            int copyLen;
+            while (true)
+            {
+                if (blockLength == 1)
+                    return outPos;
+                if (blockLength % 2 != 0)
+                {
+                    throw (new Exception("Param error!"));
+                }
+                blockLength /= 2;
+                if (blockLength < len)
+                {
+                    copyLen = blockLength;
+                }
+                else
+                {
+                    copyLen = len;
+                }
+                int staPos = blockLength - copyLen;
+
+                if (outBuf != null)
+                    resultBuf.CopyTo(copyOffset + staPos, outBuf, outPos, copyLen);
+                outPos += copyLen;
+
+                if (outBuf != null)
+                    resultBuf.CopyTo(copyOffset + blockLength + staPos, outBuf, outPos, copyLen);
+                outPos += copyLen;
+
+                copyOffset += blockLength * 2;
+            }
+        }
+        public WaveletSensor(ISensor source, BasicWavelet waveletFunc, int dataCollectLength = 4)
+        {
+            _source = source;
+            _wavelet = new WaveletFunction(waveletFunc);
+            _dataCount = source.DataBlockLength;
+            _dataCollectLength = dataCollectLength;
+            _index = 0;
+            Init();
+        }
+        public int CurrentPosition
+        {
+            get
+            {
+                return _index;
+            }
+            set
+            {
+                _index = value;
+            }
+        }
+
+        public int SkipCount
+        {
+            get { return _dataCount - 1; }
+        }
+
+        public int TotalLength
+        {
+            get { return _source.TotalLength; }
+        }
+
+        public int DataBlockLength
+        {
+            get { return _outputCount; }
+        }
+
+        public int Copy(int index, DataBlock buffer, int startIndex)
+        {
+            DataBlock _dataBuffer = new DataBlock(_dataCount);
+            DataBlock _outputBuffer = new DataBlock(_outputCount);
+
+            _source.Copy(index, _dataBuffer, 0);
+            DataBlock outTmp = new DataBlock(_dataBuffer.Length * 2);
+            DllTools.CalculateWavelet(_dataBuffer.Data, outTmp.Data, _wavelet);
+
+            CopyResult(outTmp, _outputBuffer, _dataCollectLength);
+            DataBlock.Copy(_outputBuffer, 0, buffer, startIndex, _outputBuffer.Length);
+
+            // buffer[startIndex] = 0;
+            return 1;
+        }
+        public void Init()
+        {
+            DataBlock _dataBuffer = new DataBlock(_dataCount);
+            _outputCount = CopyResult(_dataBuffer, null, _dataCollectLength);
+        }
+
+
+        public IDataSource DataSource
+        {
+            get
+            {
+                return _source.DataSource;
+            }
+        }
+
+
+        public DataSourceCtrl DataSourceCtrl
+        {
+            set
+            {
+                _source.DataSourceCtrl = value;
+            }
+        }
+
+
+        public ISensor Clone()
+        {
+            ISensor sen = MemberwiseClone() as ISensor;
+            sen.Init();
+            return sen;
+        }
+    }
+
+
 
     //===========================================
     [Serializable]
@@ -1155,140 +1321,6 @@ namespace MyProject01.Controller
         }
     }
 
-
-    //======================================
-    [Serializable]
-    class WaveletSensor : ISensor
-    {
-        private int _dataCount;
-        private int _index;
-        private int _outputCount;
-        private ISensor _source;
-
-        private int _dataCollectLength = 4;
-        private WaveletFunction _wavelet;
-
-        private int CopyResult(DataBlock resultBuf, DataBlock outBuf, int len)
-        {
-            int blockLength = _dataCount;
-            int outPos = 0;
-            int copyOffset = 0;
-            int copyLen;
-            while (true)
-            {
-                if (blockLength == 1)
-                    return outPos;
-                if (blockLength % 2 != 0)
-                {
-                    throw (new Exception("Param error!"));
-                }
-                blockLength /= 2;
-                if (blockLength < len)
-                {
-                    copyLen = blockLength;
-                }
-                else
-                {
-                    copyLen = len;
-                }
-                int staPos = blockLength - copyLen;
-
-                if (outBuf != null)
-                    resultBuf.CopyTo(copyOffset + staPos, outBuf, outPos, copyLen);
-                outPos += copyLen;
-
-                if (outBuf != null)
-                    resultBuf.CopyTo(copyOffset + blockLength + staPos, outBuf, outPos, copyLen);
-                outPos += copyLen;
-
-                copyOffset += blockLength * 2;
-            }
-        }
-        public WaveletSensor(ISensor source, BasicWavelet waveletFunc, int dataCollectLength = 4)
-        {
-            _wavelet = new WaveletFunction(waveletFunc);
-            _source = source;
-            _dataCount = source.DataBlockLength;
-            _dataCollectLength = dataCollectLength;
-            _index = 0;
-            Init();
-        }
-        public int CurrentPosition
-        {
-            get
-            {
-                return _index;
-            }
-            set
-            {
-                _index = value;
-            }
-        }
-
-        public int SkipCount
-        {
-            get { return _dataCount - 1; }
-        }
-
-        public int TotalLength
-        {
-            get { return _source.TotalLength; }
-        }
-
-        public int DataBlockLength
-        {
-            get { return _outputCount; }
-        }
-
-        public int Copy(int index, DataBlock buffer, int startIndex)
-        {
-            DataBlock _dataBuffer = new DataBlock(_dataCount);
-            DataBlock _outputBuffer = new DataBlock(_outputCount);
-
-            _source.Copy(index, _dataBuffer, 0);
-            DataBlock outTmp = new DataBlock(_dataBuffer.Length * 2);
-            DllTools.CalculateWavelet(_dataBuffer.Data, outTmp.Data, _wavelet);
-
-            CopyResult(outTmp, _outputBuffer, _dataCollectLength);
-            DataBlock.Copy(_outputBuffer, 0, buffer, startIndex, _outputBuffer.Length);
-
-            // buffer[startIndex] = 0;
-            return 1;
-        }
-        public void Init()
-        {
-            DataBlock _dataBuffer = new DataBlock(_dataCount);
-            _outputCount = CopyResult(_dataBuffer, null, _dataCollectLength);
-        }
-
-
-        public IDataSource DataSource
-        {
-            get
-            {
-                return _source.DataSource;
-            }
-        }
-
-
-        public DataSourceCtrl DataSourceCtrl
-        {
-            set
-            {
-                _source.DataSourceCtrl = value;
-            }
-        }
-
-
-        public ISensor Clone()
-        {
-            ISensor sen = MemberwiseClone() as ISensor;
-            sen.Init();
-            return sen;
-        }
-    }
-
-
     [Serializable]
     class SensorYieldRate : ISensor
     {
@@ -1347,7 +1379,70 @@ namespace MyProject01.Controller
         }
     }
 
+    [Serializable]
+    class SensorAveFilter : ISensor
+    {
+        private ISensor _sourceSen;
+        private int _aveCnt;
 
+        public SensorAveFilter(ISensor srcSensor, int aveCount)
+        {
+            _sourceSen = srcSensor;
+            _aveCnt = aveCount;
+        }
+        public int SkipCount
+        {
+            get { return _sourceSen.SkipCount + _aveCnt-1; }
+        }
+
+        public int TotalLength
+        {
+            get { return _sourceSen.TotalLength; }
+        }
+
+        public int DataBlockLength
+        {
+            get { return _sourceSen.DataBlockLength - _aveCnt+1; }
+        }
+
+        public IDataSource DataSource
+        {
+            get { return _sourceSen.DataSource; }
+        }
+
+        public DataSourceCtrl DataSourceCtrl
+        {
+            set { _sourceSen.DataSourceCtrl = value; }
+        }
+
+        public int Copy(int index, DataBlock buffer, int offset)
+        {
+            DataBlock tmp = new DataBlock(_sourceSen.DataBlockLength);
+            _sourceSen.Copy(index, tmp, 0);
+            int srcOffset = _aveCnt - 1;
+            for (int i = 0; i < DataBlockLength; i++)
+            {
+                double result = 0;
+                for (int j = 0; j < _aveCnt; j++ )
+                {
+                    result += tmp[srcOffset + i - j] / _aveCnt;
+                }
+                buffer[offset + i] = result;
+            }
+
+            return DataBlockLength;
+        }
+
+        public void Init()
+        {
+            return;
+        }
+
+        public ISensor Clone()
+        {
+            return MemberwiseClone() as ISensor;
+        }
+    }
     class SensorUtility
     {
 

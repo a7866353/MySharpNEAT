@@ -7,19 +7,24 @@ using System.Threading.Tasks;
 
 namespace MyProject01.Util
 {
-    class FwtDataNormalizer
+    class ArrayDataNormalizeAnalyzer
     {
-        private NormalizeAnalyzer[] _normAnlzArr;
+        private BasicNormalizeAnalyzer _sampleAnalyzer;
+        private BasicNormalizeAnalyzer[] _normAnlzArr;
         private int _length;
 
-        public void Init(double[] firstDataArray, double middleValue, double limit)
+        public ArrayDataNormalizeAnalyzer(BasicNormalizeAnalyzer anlz)
+        {
+            _sampleAnalyzer = anlz;
+        }
+
+        public void Init(double[] firstDataArray)
         {
             _length = firstDataArray.Length;
-            _normAnlzArr = new NormalizeAnalyzer[_length];
+            _normAnlzArr = new BasicNormalizeAnalyzer[_length];
             for (int i = 0; i < _length; i++)
             {
-                NormalizeAnalyzer na = new NormalizeAnalyzer();
-                na.SetTarget(middleValue, limit / 2, limit);
+                BasicNormalizeAnalyzer na = _sampleAnalyzer.Clone();
                 na.Init(firstDataArray[i]);
                 _normAnlzArr[i] = na;
             }
@@ -69,8 +74,7 @@ namespace MyProject01.Util
             double[] buffer = new double[dataBlock.BlockLength];
 
             dataBlock.Copy(buffer);
-            NormalizeAnalyzer norm = new NormalizeAnalyzer();
-            norm.SetTarget(_targetDataMiddleValue, _targetDataLimit / 2, _targetDataLimit);
+            NormalizeAnalyzer norm = new NormalizeAnalyzer(_targetDataMiddleValue, _targetDataLimit / 2, _targetDataLimit);
             norm.Init(buffer[0]);
 
             while(true)
@@ -90,7 +94,34 @@ namespace MyProject01.Util
 
     }
 
-    class NormalizeAnalyzer
+    abstract class BasicNormalizeAnalyzer
+    {
+        abstract public double Scale { get; }
+        abstract public double Offset { get; }
+        abstract public Normalizer Normalizer { get; }
+        abstract public void Set(double data);
+        abstract public void Init(double initdata);
+        abstract public BasicNormalizeAnalyzer Clone();
+
+        public void Set(DataSection secData)
+        {
+            for (int i = 0; i < secData.Length; i++)
+            {
+                Set(secData[i]);
+            }
+        }
+        public void Set(double[] dataArr)
+        {
+            for (int i = 0; i < dataArr.Length; i++)
+            {
+                Set(dataArr[i]);
+            }
+        }
+
+
+    }
+
+    class NormalizeAnalyzer : BasicNormalizeAnalyzer
     {
         private double _limit = 0.5;
         private double _targetDataMargin = 0.25;
@@ -102,23 +133,7 @@ namespace MyProject01.Util
         private double _dataMaxValue;
         private double _dataMinValue;
 
-        public void Set(double data)
-        {
-            if (data > _dataMaxValue)
-                _dataMaxValue = data;
-            else if (data < _dataMinValue)
-                _dataMinValue = data;
-        }
-
-        public void Set(DataSection secData)
-        {
-            for(int i=0;i<secData.Length;i++)
-            {
-                Set(secData[i]);
-            }
-        }
-
-        public void SetTarget(double middleValue, double margin, double limit)
+        public NormalizeAnalyzer(double middleValue, double margin, double limit)
         {
             _targetDataMid = middleValue;
             _targetDataMargin = margin;
@@ -126,36 +141,104 @@ namespace MyProject01.Util
 
             _targDataMax = _targetDataMid + _targetDataMargin;
             _targDataMin = _targetDataMid - _targetDataMargin;
+
+        }
+        override public void Set(double data)
+        {
+            if (data > _dataMaxValue)
+                _dataMaxValue = data;
+            else if (data < _dataMinValue)
+                _dataMinValue = data;
         }
 
-        public void Init(double initdata)
+        override public void Init(double initdata)
         {
             _dataMaxValue = _dataMinValue = initdata;
         }
 
         // out = (in + Offset) * Scale;
-        public double Scale
+        override public double Scale
         {
             get 
             {
                 return (_targDataMax - _targDataMin) / (_dataMaxValue - _dataMinValue); 
             }
         }
-        public double Offset
+        override public double Offset
         {
             get { return (_dataMaxValue - _dataMinValue) * _targDataMax / (_targDataMax - _targDataMin) - _dataMaxValue; }
         }
 
-        public Normalizer Normalizer
+        override public Normalizer Normalizer
         {
             get { return new NormalizerWithTrim(Offset, Scale, _targetDataMid + _limit, _targetDataMid - _limit) { SourceMaxValue = _dataMaxValue, SourceMinValue = _dataMinValue }; }
         }
-/*
-        public NormalizerWithTrim NormalizeWithTrim
+
+        public override BasicNormalizeAnalyzer Clone()
         {
-            get { return new NormalizerWithTrim(Offset, Scale, 1, 0); }
+            return (NormalizeAnalyzer)MemberwiseClone();
         }
-*/
+    }
+
+    class ZeroScoreNormalizeAnalyzer : BasicNormalizeAnalyzer
+    {
+        private double _scale = 1.0;
+        private List<double> _dataList;
+
+        public ZeroScoreNormalizeAnalyzer(double scale)
+        {
+            _scale = scale;
+        }
+
+        override public void Set(double data)
+        {
+            _dataList.Add(data);
+        }
+
+        override public void Init(double initdata)
+        {
+            _dataList = new List<double>();
+            _dataList.Add(initdata);
+        }
+
+        // out = (in + Offset) * Scale;
+        override public double Scale
+        {
+            get
+            {
+                double ave = Offset;
+                ave *=  ave;
+                double sum = 0;
+                foreach (double d in _dataList)
+                    sum += d * d + ave;
+                sum /= _dataList.Count;
+
+                return _scale / Math.Sqrt(sum);
+            }
+        }
+        override public double Offset
+        {
+            get 
+            {
+                double sum = 0;
+                foreach (double d in _dataList)
+                    sum += d;
+                sum /= _dataList.Count;
+
+                return sum;
+            }
+        }
+
+        override public Normalizer Normalizer
+        {
+            get { return new Normalizer(Offset, Scale); }
+        }
+
+
+        public override BasicNormalizeAnalyzer Clone()
+        {
+            return new ZeroScoreNormalizeAnalyzer(_scale);
+        }
     }
 
     [Serializable]
@@ -175,13 +258,19 @@ namespace MyProject01.Util
 
         virtual public double Convert(double value)
         {
-            return (value + Offset) * Scale;
+            double res = (value + Offset) * Scale;
+            if (double.IsNaN(res) == true)
+                return 0;
+            else
+                return res;
         }
 
         public void Convert(DataSection dataSec)
         {
             for (int i = 0; i < dataSec.Length; i++)
+            {
                 dataSec[i] = Convert(dataSec[i]);
+            }
         }
 
         public override string ToString()

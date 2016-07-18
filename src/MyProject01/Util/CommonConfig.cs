@@ -38,11 +38,13 @@ namespace MyProject01.Util
     }
     class DataLoaderParamList
     {
+        static int _preCount = 50000;
         static public DataLoaderParam[] GetParams()
         {
             List<DataLoaderParam> paramList = new List<DataLoaderParam>();
             DateTime startDate;
             DateTime endDate;
+
 
             // Current
             //------------------------------
@@ -56,7 +58,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -70,9 +72,9 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
-                IsDefault = true
+                IsDefault = false
             });
 
             endDate = DateTime.Now;
@@ -83,7 +85,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -100,7 +102,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -113,7 +115,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -124,7 +126,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -137,7 +139,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -149,7 +151,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -166,7 +168,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -178,7 +180,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -190,7 +192,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -202,7 +204,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -215,7 +217,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -227,7 +229,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -239,7 +241,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -251,7 +253,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -264,7 +266,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.D1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -276,7 +278,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.D1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -288,7 +290,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.D1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -300,7 +302,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.D1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
@@ -317,7 +319,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -329,7 +331,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -341,7 +343,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -353,7 +355,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M5,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -366,7 +368,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -378,9 +380,9 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
-                IsDefault = false
+                IsDefault = true
             });
 
             startDate = endDate.AddYears(-2);
@@ -390,7 +392,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -402,7 +404,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.M30,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -415,7 +417,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.D1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -427,7 +429,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.D1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -439,7 +441,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.D1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -451,7 +453,7 @@ namespace MyProject01.Util
                 TimeFrame = DataTimeType.D1,
                 StartDate = startDate,
                 EndDate = endDate,
-                PreCount = 50000,
+                PreCount = _preCount,
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
@@ -473,9 +475,9 @@ namespace MyProject01.Util
             {
                 return new ServerIPParam[]
                 {
-                    new ServerIPParam(){ IP = "127.0.0.1", IsDefault = true},
+                    new ServerIPParam(){ IP = "127.0.0.1", IsDefault = false},
                     new ServerIPParam(){ IP = "192.168.1.11", IsDefault = false},
-                    new ServerIPParam(){ IP = "192.168.1.15", IsDefault = false},
+                    new ServerIPParam(){ IP = "192.168.1.15", IsDefault = true},
 
                 };
             }
@@ -488,6 +490,10 @@ namespace MyProject01.Util
         public static string ServerIP = "192.168.1.15";
         public static int PopulationSize = 2048;
         public static DataLoaderParam LoaderParam = null;
+        public static double BuyOffset = 0.01;
+        public static double SellOffset = 0.01;
+        public static int TrainingDataBlockLength = 32;
+        public static int TrainingTryCount = 5;
     }
 
 

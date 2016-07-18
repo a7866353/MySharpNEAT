@@ -110,14 +110,13 @@ namespace MyProject01.Controller
         }
         public void Normilize(BasicDataBlock dataBlock, double middleValue, double limit)
         {
-            NormalizeAnalyzer norm = new NormalizeAnalyzer();
+            NormalizeAnalyzer norm = new NormalizeAnalyzer(middleValue, limit / 2, limit);
             double[] buffer = new double[dataBlock.BlockLength];
             DataSection[] secArr = CreateInputSection(buffer);
             DataSection rateSec = secArr[0];
 
             dataBlock.Reset();
             dataBlock.Copy(buffer);
-            norm.SetTarget(middleValue, limit / 2, limit);
             norm.Init(rateSec[0]);
 
             while (true)

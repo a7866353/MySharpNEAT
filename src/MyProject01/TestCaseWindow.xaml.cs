@@ -23,6 +23,7 @@ using MyProject01.Util.DllTools;
 using MyProject01.Controller;
 
 using System.Threading;
+using MyProject01.DataSources;
 
 namespace MyProject01
 {
@@ -90,23 +91,22 @@ namespace MyProject01
                 testButton.Content = displayName;
                 testButton.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
                 testButton.Click += new RoutedEventHandler(delegate(object sender, RoutedEventArgs e)
-                    {
-                        MainWindow mainWin = new MainWindow(obj);
-                        mainWin.Title = DateTime.Now.ToString() + ": " + displayName;
-                        mainWin.Closed += new EventHandler(
-                                delegate(object sender2, EventArgs args)
-                                {
-                                    Application.Current.Shutdown();
-                                }
-                            );
-                        mainWin.Show();
-                    });
+                {
+                    MainWindow mainWin = new MainWindow(obj);
+                    mainWin.Title = DateTime.Now.ToString() + ": " + displayName;
+                    mainWin.Closed += new EventHandler(
+                            delegate(object sender2, EventArgs args)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        );
+                    mainWin.Show();
+                });
                 border.Child = testButton;
                 MainStackPanel.Children.Add(border);
             }
 
             InitParamConfig();
-
         }
         private void InitParamConfig()
         {
@@ -163,10 +163,43 @@ namespace MyProject01
                 );
             AddParamConfigUI("Populaton Size", popSizeTb);
 
+            // BuyOffset
+            //---------------------------
+            TextBox buyOffsetTb = new TextBox();
+            buyOffsetTb.Text = CommonConfig.BuyOffset.ToString();
+            buyOffsetTb.TextChanged += new TextChangedEventHandler(
+                    delegate(object sender, TextChangedEventArgs args)
+                    {
+                        double result;
+                        if (double.TryParse(buyOffsetTb.Text, out result) == false)
+                            return;
+                        CommonConfig.BuyOffset = result;
+                    }
+                );
+            AddParamConfigUI("BuyOffset", buyOffsetTb);
+
+            // SellOffset
+            //---------------------------
+            TextBox sellOffsetTb = new TextBox();
+            sellOffsetTb.Text = CommonConfig.SellOffset.ToString();
+            sellOffsetTb.TextChanged += new TextChangedEventHandler(
+                    delegate(object sender, TextChangedEventArgs args)
+                    {
+                        double result;
+                        if (double.TryParse(sellOffsetTb.Text, out result) == false)
+                            return;
+                        CommonConfig.SellOffset = result;
+                    }
+                );
+            AddParamConfigUI("SellOffset", sellOffsetTb);
+
+            AddTrainingDataBlockLengthParam();
+            AddTrainingTryCountParam();
+
             // LoaderParam
             //------------------------
             StackPanel loaderPanel = new StackPanel();
-            foreach(DataLoaderParam parm in DataLoaderParamList.GetParams())
+            foreach (DataLoaderParam parm in DataLoaderParamList.GetParams())
             {
                 RadioButton loaderParamRb = new RadioButton();
                 loaderParamRb.GroupName = "LoaderParam";
@@ -184,6 +217,7 @@ namespace MyProject01
             AddParamConfigUI("Rate Data Loader", loaderPanel);
 
         }
+
         private void AddParamConfigUI(string name, UIElement ui)
         {
             StackPanel panel = this.ParamConfigStackPanel;
@@ -191,6 +225,36 @@ namespace MyProject01
             if (ui != null)
                 panel.Children.Add(ui);
             panel.Children.Add(new Rectangle() { Height = 2, HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch, Fill = Brushes.Black });
+        }
+        private void AddTrainingDataBlockLengthParam()
+        {
+            TextBox tb = new TextBox();
+            tb.Text = CommonConfig.TrainingDataBlockLength.ToString();
+            tb.TextChanged += new TextChangedEventHandler(
+                    delegate(object sender, TextChangedEventArgs args)
+                    {
+                        int result;
+                        if (int.TryParse(tb.Text, out result) == false)
+                            return;
+                        CommonConfig.TrainingDataBlockLength = result;
+                    }
+                );
+            AddParamConfigUI("TrainingDataBlockLength", tb);
+        }
+        private void AddTrainingTryCountParam()
+        {
+            TextBox tb = new TextBox();
+            tb.Text = CommonConfig.TrainingTryCount.ToString();
+            tb.TextChanged += new TextChangedEventHandler(
+                    delegate(object sender, TextChangedEventArgs args)
+                    {
+                        int result;
+                        if (int.TryParse(tb.Text, out result) == false)
+                            return;
+                        CommonConfig.TrainingTryCount = result;
+                    }
+                );
+            AddParamConfigUI("TrainingTryCount", tb);
         }
 
         void TestCaseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -309,6 +373,44 @@ namespace MyProject01
             }));
         }
 
+        private void TestDataAnalyzer()
+        {
+            this.Dispatcher.BeginInvoke(new Func(delegate()
+            {
+                BasicTestDataLoader _loader = NewTestDataPacket.GetRecnetM30_3Month();
+                _loader.Load();
+                DataSourceCtrl dsc = new DataSources.DataSourceCtrl(_loader);
+                ISensor Sensor = new RateWaveletSensor(64, new Daubechies20Wavelet(), 4);
+                Sensor.DataSourceCtrl = dsc;
+
+                DataAnalyzer[] anzArr = new DataAnalyzer[Sensor.DataBlockLength];
+                for (int i = 0; i < anzArr.Length;i++ )
+                {
+                    anzArr[i] = new DataAnalyzer();
+                    anzArr[i].Init(2048);
+                }
+                DataBlock db = new DataBlock(Sensor.DataBlockLength);
+                for(int i=50000;i<Sensor.TotalLength;i++)
+                {
+                    Sensor.Copy(i, db, 0);
+                    for (int j = 0; j < db.Length;j++ )
+                        anzArr[j].AddData(db.Data[j]);
+                }
+
+                foreach (DataAnalyzer anz in anzArr)
+                {
+                    DataAnalyzerDesc[] descArr = anz.GetResult();
+                    LogFile.WriteLine("DataAnalyzer[]");
+                    LogFile.WriteLine("========================");
+                    foreach (DataAnalyzerDesc desc in descArr)
+                    {
+                        LogFile.WriteLine(desc.ToString());
+                    }
+                }
+
+            }));
+        }
+
         private void AddNewTestCase(TestCaseGroup group)
         {
             BasicNewTestCase[] testCaseArr = NewTestCollecor.GetTest();
@@ -340,7 +442,8 @@ namespace MyProject01
             TestCaseGroup newTestList = new TestCaseGroup();
             newTestList.Add(new TestCaseObject("TestDataBaseViewer", "", new TestCaseObject.TestFucntion(TestDataBaseViewer)));
             newTestList.Add(new TestCaseObject("ControllerViewer", "", new TestCaseObject.TestFucntion(ControllerViewer)));
-            newTestList.Add(new TestCaseObject("TestFWT", "", new TestCaseObject.TestFucntion(TestFWT)));
+            newTestList.Add(new TestCaseObject("TestDataAnalyzer", "", new TestCaseObject.TestFucntion(TestDataAnalyzer)));
+
             // New test case
             AddNewTestCase(newTestList);
 

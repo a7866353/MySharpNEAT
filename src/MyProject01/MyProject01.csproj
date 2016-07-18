@@ -193,6 +193,7 @@
     <Compile Include="TrainingMethods\ResilientPropagationTraining.cs" />
     <Compile Include="Util\BlockDataNormalizer.cs" />
     <Compile Include="Util\CommonConfig.cs" />
+    <Compile Include="Util\DataAnalyzer.cs" />
     <Compile Include="Util\DataNormallizer.cs" />
     <Compile Include="Util\DataObject\BasicDataBlock.cs" />
     <Compile Include="Util\DataObject\DataBaseBuffer.cs" />

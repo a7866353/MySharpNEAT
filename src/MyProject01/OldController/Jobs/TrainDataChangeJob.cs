@@ -16,11 +16,12 @@ namespace MyProject01.Controller.Jobs
 
         private int _currentStartPos;
 
-        public TrainDataChangeJob(AgentFactory agentFac, int startPos, int len, int stepOffset)
+        public TrainDataChangeJob(AgentFactory agentFac, int startPos, int len, int stepOffset,  int trainCount)
         {
             _agentFac = agentFac;
             _startPosition = startPos;
             _stepOffset = stepOffset;
+            _trainCount = trainCount;
 
             _currentStartPos = _startPosition;
             _maxPos = _startPosition + len;

@@ -11,6 +11,6 @@
         <Label Content="TestName: " HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.929,0.464" Margin="39,0,0,0" Visibility="Hidden"/>
         <TextBox Name="TestNameTextBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" Margin="114,2,0,0" Visibility="Hidden"/>
         <Button Content="Start All" Name="StartAllButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="10,10,0,0"/>
-        <StackPanel Name="ParamConfigStackPanel" HorizontalAlignment="Left" Height="723" Margin="10,37,0,0" VerticalAlignment="Top" Width="385"/>
+        <StackPanel Name="ParamConfigStackPanel" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Stretch" Width="385"/>
     </Grid>
 </Window>

@@ -32,6 +32,13 @@ namespace MyProject01.Util.DllTools
 
     abstract class BasicDaubechiesWavelet : BasicWavelet
     {
+        public BasicDaubechiesWavelet()
+        {
+            for(int i=0;i<Scaling.Length;i++)
+            {
+                Scaling[i] /= Math.Sqrt(2);
+            }
+        }
         public override double[] Wavelet
         {
             get 
@@ -79,8 +86,8 @@ namespace MyProject01.Util.DllTools
                 {
                     return new double[] 
                     { 
-                        1, 
-                        1, 
+                        1.0/Math.Sqrt(2), 
+                        1.0/Math.Sqrt(2), 
                      };
                 }
             }
@@ -91,19 +98,15 @@ namespace MyProject01.Util.DllTools
                 {
                     return new double[] 
                     { 
-                        -1, 
-                        1, 
+                        -1.0/Math.Sqrt(2), 
+                        1.0/Math.Sqrt(2), 
                      };
                 }
             }
         }
     class Daubechies8Wavelet : BasicDaubechiesWavelet
     {
-        public override double[] Scaling
-        {
-            get 
-            { 
-                return new double[] 
+        private double[] _scaling = new double[] 
                 { 
                     0.32580343, 
                     1.01094572, 
@@ -114,23 +117,92 @@ namespace MyProject01.Util.DllTools
                     0.0465036,
                     -0.01498699
                 }; 
+        public override double[] Scaling
+        {
+            get 
+            {
+                return _scaling;
             }
         }
     }
-#if true
-    class Daubechies4Wavelet : BasicDaubechiesWavelet
+    class Daubechies16Wavelet : BasicDaubechiesWavelet
     {
+        private double[] _scaling = new double[] 
+                { 
+                    0.07695562, 
+                    0.44246725, 
+                    0.95548615,
+                    0.82781653,
+                    -0.02238574,
+                    -0.40165863,
+                    6.68194092e-4,
+                    0.18207636,
+                    -0.02456390,
+                    -0.06235021,
+                    0.01977216,
+                    0.01236884,
+                    -6.88771926e-3,
+                    -5.54004549e-4,
+                    9.55229711e-4,
+                    -1.66137261e-4
+                };
         public override double[] Scaling
         {
             get
             {
-                return new double[] 
+                return _scaling;
+            }
+        }
+    }
+    class Daubechies20Wavelet : BasicDaubechiesWavelet
+    {
+        private double[] _scaling = new double[] 
+                { 
+                    0.03771716,
+                    0.26612218,
+                    0.74557507,
+                    0.97362811,
+                    0.39763774,
+                    -0.35333620,
+                    -0.27710988,
+                    0.18012745,
+                    0.13160299,
+                    -0.10096657,
+                    -0.04165925,
+                    0.04696981,
+                    5.10043697e-3,
+                    -0.01517900,
+                    1.97332536e-3,
+                    2.81768659e-3,
+                    -9.69947840e-4,
+                    -1.64709006e-4,
+                    1.32354367e-4,
+                    -1.875841e-5
+                };
+        public override double[] Scaling
+        {
+            get
+            {
+                return _scaling;
+            }
+        }
+    }
+
+#if true
+    class Daubechies4Wavelet : BasicDaubechiesWavelet
+    {
+        private double[] _scaling = new double[] 
                 { 
                     0.6830127, 
                     1.1830127, 
                     0.3169873,
                     -0.1830127
                 };
+        public override double[] Scaling
+        {
+            get
+            {
+                return _scaling;
             }
         }
     }
@@ -155,19 +227,20 @@ namespace MyProject01.Util.DllTools
 #endif
     class Legendre6Wavelet : BasicDaubechiesWavelet
     {
+        private double[] _scaling = new double[] 
+                { 
+                    63/256f, 
+                    35/256f,
+                    30/256f,
+                    30/256f, 
+                    35/256f,
+                    63/256f
+                };
         public override double[] Scaling
         {
             get
             {
-                return new double[] 
-                { 
-                    0.348029119, 
-                    0.19334951,
-                    0.165728152,
-                    0.165728152, 
-                    0.19334951,
-                    0.348029119
-                };
+                return _scaling;
             }
         }
     }
