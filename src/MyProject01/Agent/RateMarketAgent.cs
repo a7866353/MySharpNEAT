@@ -97,6 +97,7 @@ namespace MyProject01.Agent
         private double _currentRate;
 
         private int _dealCount;
+        private OrderLog _log;
 
         public Order(double initMoney)
         {
@@ -105,6 +106,8 @@ namespace MyProject01.Agent
             _lastAction = MarketActions.Init;
             _startRate = 0;
             _dealCount = 0;
+
+            _log = new OrderLog();
         }
         public int DealCount
         {
@@ -154,19 +157,16 @@ namespace MyProject01.Agent
         {
             _currentRate = currentRate;
 
-            OrderLog log = new OrderLog()
-            {
-                BenifitMoney = Benifit(),
-                BenifitRate = Benifit() / _money,
-                StartPrice = _startRate,
-                ClosePrice = _currentRate,
-            };
+            _log.BenifitMoney = Benifit();
+            _log.BenifitRate = Benifit() / _money;
+            _log.StartPrice = _startRate;
+            _log.ClosePrice = _currentRate;
 
             _money += Benifit();
             _type = OrderType.Nothing;
             _lastAction = MarketActions.Close;
 
-            return log;
+            return _log;
         }
 
         private double Benifit()
