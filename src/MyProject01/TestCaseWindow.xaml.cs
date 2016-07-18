@@ -283,7 +283,28 @@ namespace MyProject01
             this.Dispatcher.BeginInvoke(new Func(delegate()
             {
                 DataBaseViewer win = new DataBaseViewer();
-                Thread.CurrentThread.Priority = ThreadPriority.Highest;
+                win.Closed += new EventHandler(
+                    delegate(object sender, EventArgs args)
+                    {
+                        Application.Current.Shutdown();
+                    }
+                );
+                Thread.CurrentThread.Priority = ThreadPriority.Normal;
+                win.Show();
+            }));
+        }
+        private void ControllerViewer()
+        {
+            this.Dispatcher.BeginInvoke(new Func(delegate()
+            {
+                ControllerCheckWin win = new ControllerCheckWin();
+                win.Closed += new EventHandler(
+                    delegate(object sender, EventArgs args)
+                    {
+                        Application.Current.Shutdown();
+                    }
+                );
+                Thread.CurrentThread.Priority = ThreadPriority.Normal;
                 win.Show();
             }));
         }
@@ -318,7 +339,7 @@ namespace MyProject01
 
             TestCaseGroup newTestList = new TestCaseGroup();
             newTestList.Add(new TestCaseObject("TestDataBaseViewer", "", new TestCaseObject.TestFucntion(TestDataBaseViewer)));
-
+            newTestList.Add(new TestCaseObject("ControllerViewer", "", new TestCaseObject.TestFucntion(ControllerViewer)));
             newTestList.Add(new TestCaseObject("TestFWT", "", new TestCaseObject.TestFucntion(TestFWT)));
             // New test case
             AddNewTestCase(newTestList);

@@ -1,0 +1,14 @@
+﻿<Window x:Class="MyProject01.Win.ControllerCheckWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ControllerCheckWin" Height="355.2" Width="479.2">
+    <Grid>
+        <TextBox Name="ControllerNameTextBox" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="ControllerName" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="StartDateTextBox" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" Text="StartDate" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="EndDateTextBox" HorizontalAlignment="Left" Height="23" Margin="10,66,0,0" TextWrapping="Wrap" Text="EndDate" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="TimeFrameTextBox" HorizontalAlignment="Left" Height="23" Margin="10,94,0,0" TextWrapping="Wrap" Text="TimeFrame" VerticalAlignment="Top" Width="120"/>
+        <Button Name="SubmmitButton" Content="Button" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top" Width="75" Click="SubmmitButton_Click"/>
+        <TextBlock Name="ResultTextBlock" IsEnabled="False" HorizontalAlignment="Left" Margin="135,10,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="306" Width="328"/>
+
+    </Grid>
+</Window>
