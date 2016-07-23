@@ -1,6 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Experiments>
-
+  <Experiment name="Sequence 4bit (NEAT)">
+    <AssemblyPath>SharpNeatDomains.dll</AssemblyPath>
+    <ClassName>SharpNeat.Domains.Sequence.SequenceExperiment</ClassName>
+    <Config>
+      <PopulationSize>4096</PopulationSize>
+      <SpecieCount>50</SpecieCount>
+      <Activation>
+        <Scheme>CyclicFixedIters</Scheme>
+        <Iters>4</Iters>
+      </Activation>
+      <ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
+      <ComplexityThreshold>10</ComplexityThreshold>
+      <Description>Sequence 4bit test.
+      </Description>
+    </Config>
+  </Experiment>
+  
   <Experiment name="Binary 3-Multiplexer (NEAT)">
     <AssemblyPath>SharpNeatDomains.dll</AssemblyPath>
     <ClassName>SharpNeat.Domains.BinaryThreeMultiplexer.BinaryThreeMultiplexerExperiment</ClassName>

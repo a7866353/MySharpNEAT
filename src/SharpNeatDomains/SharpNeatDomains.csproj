@@ -131,6 +131,8 @@
     <Compile Include="PreyCapture\PreyCaptureEvaluator.cs" />
     <Compile Include="PreyCapture\PreyCaptureExperiment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sequence\SequenceEvaluator.cs" />
+    <Compile Include="Sequence\SequenceExperiment.cs" />
     <Compile Include="SinglePoleBalancing\SinglePoleBalancingEvaluator.cs" />
     <Compile Include="SinglePoleBalancing\SinglePoleStateData.cs" />
     <Compile Include="SinglePoleBalancing\SinglePoleBalancingExperiment.cs" />
