@@ -13,7 +13,7 @@ namespace MyProject01.Controller.Jobs
         public DateTime StartDate;
         public DateTime CurrentDate;
 
-        public Trainer Trainer;
+        // public Trainer Trainer;
         public bool IsEnd;
         public bool IsChanged;
 

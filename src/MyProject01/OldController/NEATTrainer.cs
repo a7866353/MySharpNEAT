@@ -13,6 +13,8 @@ using SharpNeat.Domains;
 using SharpNeat.EvolutionAlgorithms;
 using SharpNeat.EvolutionAlgorithms.ComplexityRegulation;
 using SharpNeat.Genomes.Neat;
+using SharpNeat.Genomes.RbfNeat;
+using SharpNeat.Network;
 using SharpNeat.Phenomes;
 using SharpNeat.SpeciationStrategies;
 using System;
@@ -127,11 +129,6 @@ namespace MyProject01.Controller
             get { return _epoch; }
         }
 
-        public Trainer(int inVectorLength, int outVectorLength)
-        {
-            _inVecLen = inVectorLength;
-            _outVecLen = outVectorLength;
-        }
         public Trainer(AgentFactory agentFactory)
         {
             _agentFactory = agentFactory;
@@ -210,7 +207,166 @@ namespace MyProject01.Controller
         protected NeatEvolutionAlgorithm<NeatGenome> CreateTrainEA()
         {
             _context = new TrainerContex();
-            _context.Trainer = this;
+
+            // Create a genome factory with our neat genome parameters object and the appropriate number of input and output neuron genes.
+            IGenomeFactory<NeatGenome> genomeFactory = CreateGenomeFactory();
+
+            // Create an initial population of randomly generated genomes.
+            List<NeatGenome> genomeList = genomeFactory.CreateGenomeList(_populationSize, 0);
+
+            // Create distance metric. Mismatched genes have a fixed distance of 10; for matched genes the distance is their weigth difference.
+            IDistanceMetric distanceMetric = new ManhattanDistanceMetric(1.0, 0.0, 10.0);
+            ISpeciationStrategy<NeatGenome> speciationStrategy = new ParallelKMeansClusteringStrategy<NeatGenome>(distanceMetric, _parallelOptions);
+
+            // Create complexity regulation strategy.
+            IComplexityRegulationStrategy complexityRegulationStrategy = ExperimentUtils.CreateComplexityRegulationStrategy(_complexityRegulationStr, _complexityThreshold);
+
+            // Create the evolution algorithm.
+            NeatEvolutionAlgorithm<NeatGenome> ea = new NeatEvolutionAlgorithm<NeatGenome>(_eaParams, speciationStrategy, complexityRegulationStrategy);
+
+            // Create IBlackBox evaluator.
+            NewNormalScore evaluator = new NewNormalScore(_agentFactory);
+
+            // Create genome decoder.
+            _genomeDecoder = CreateGenomeDecoder();
+
+            // Create a genome list evaluator. This packages up the genome decoder with the genome evaluator.
+            IGenomeListEvaluator<NeatGenome> innerEvaluator = new ParallelGenomeListEvaluator<NeatGenome, IBlackBox>(_genomeDecoder, evaluator, _parallelOptions);
+
+            // Wrap the list evaluator in a 'selective' evaulator that will only evaluate new genomes. That is, we skip re-evaluating any genomes
+            // that were in the population in previous generations (elite genomes). This is determined by examining each genome's evaluation info object.
+            IGenomeListEvaluator<NeatGenome> selectiveEvaluator = new SelectiveGenomeListEvaluator<NeatGenome>(
+                                                                                    innerEvaluator,
+                                                                                    SelectiveGenomeListEvaluator<NeatGenome>.CreatePredicate_OnceOnly());
+            // Initialize the evolution algorithm.
+            ea.Initialize(selectiveEvaluator, genomeFactory, genomeList);
+
+            return ea;
+        }
+    }
+    class RbfTrainer
+    {
+        private int _inVecLen;
+        private int _outVecLen;
+        private TrainerContex _context;
+
+
+        public string TestName = "DefaultTest000";
+        public ICheckJob CheckCtrl;
+
+
+        private long _epoch;
+
+
+        NeatEvolutionAlgorithmParameters _eaParams;
+        NeatGenomeParameters _neatGenomeParams;
+        NetworkActivationScheme _activationScheme;
+        string _complexityRegulationStr;
+        int? _complexityThreshold;
+        string _description;
+        ParallelOptions _parallelOptions;
+        string _name;
+        int _specieCount;
+        double _rbfMutationSigmaCenter;
+        double _rbfMutationSigmaRadius;
+
+
+        AgentFactory _agentFactory;
+        int _populationSize;
+
+        private NeatEvolutionAlgorithm<NeatGenome> _ea;
+        private IGenomeDecoder<NeatGenome, IBlackBox> _genomeDecoder;
+
+        protected long Epoch
+        {
+            get { return _epoch; }
+        }
+
+        public RbfTrainer(AgentFactory agentFactory)
+        {
+            _agentFactory = agentFactory;
+
+            _name = "SharpNEAT";
+            _populationSize = CommonConfig.PopulationSize;
+            _specieCount = 10;
+            _activationScheme = NetworkActivationScheme.CreateCyclicFixedTimestepsScheme(1);
+            _complexityRegulationStr = "Absolute";
+            _complexityThreshold = 10;
+            _description = "SharpNEAT Test";
+            _parallelOptions = new ParallelOptions();
+
+            _eaParams = new NeatEvolutionAlgorithmParameters();
+            _eaParams.SpecieCount = _specieCount;
+            _neatGenomeParams = new NeatGenomeParameters();
+            // _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
+        }
+
+        public void Initialize(string name, XmlElement xmlConfig)
+        {
+            _name = name;
+            _populationSize = XmlUtils.GetValueAsInt(xmlConfig, "PopulationSize");
+            _specieCount = XmlUtils.GetValueAsInt(xmlConfig, "SpecieCount");
+            _activationScheme = ExperimentUtils.CreateActivationScheme(xmlConfig, "Activation");
+            _complexityRegulationStr = XmlUtils.TryGetValueAsString(xmlConfig, "ComplexityRegulationStrategy");
+            _complexityThreshold = XmlUtils.TryGetValueAsInt(xmlConfig, "ComplexityThreshold");
+            _description = XmlUtils.TryGetValueAsString(xmlConfig, "Description");
+            _parallelOptions = ExperimentUtils.ReadParallelOptions(xmlConfig);
+            _rbfMutationSigmaCenter = 0.1;
+            _rbfMutationSigmaRadius = 0.1;
+
+            _eaParams = new NeatEvolutionAlgorithmParameters();
+            _eaParams.SpecieCount = _specieCount;
+            _neatGenomeParams = new NeatGenomeParameters();
+            _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
+            _neatGenomeParams.InitialInterconnectionsProportion = 0.1;
+            _neatGenomeParams.ConnectionWeightMutationProbability = 0.788;
+            _neatGenomeParams.AddConnectionMutationProbability = 0.001;
+            _neatGenomeParams.AddConnectionMutationProbability = 0.01;
+            _neatGenomeParams.NodeAuxStateMutationProbability = 0.2;
+
+        }
+        public void RunTestCase()
+        {
+            LogFile.WriteLine(@"Beginning training...");
+
+            _ea = CreateTrainEA();
+            _epoch = 1;
+
+            _ea.UpdateEvent += train_UpdateEvent;
+            _ea.StartContinue();
+        }
+
+        void train_UpdateEvent(object sender, EventArgs e)
+        {
+            _context.Epoch = Epoch;
+            _context.CurrentDate = DateTime.Now;
+            _context.BestNetwork = new NEATNetwork(_genomeDecoder.Decode(_ea.CurrentChampGenome));
+            _context.Fitness = _ea.CurrentChampGenome.EvaluationInfo.Fitness;
+            CheckCtrl.Do(_context);
+
+            // double fitness = _ea.CurrentChampGenome.EvaluationInfo.Fitness;
+            // LogFile.WriteLine(_epoch.ToString() + ": " + fitness.ToString());
+            _epoch++;
+        }
+        public IGenomeFactory<NeatGenome> CreateGenomeFactory()
+        {
+            IActivationFunctionLibrary activationFnLibrary = DefaultActivationFunctionLibrary.CreateLibraryRbf(_neatGenomeParams.ActivationFn, _rbfMutationSigmaCenter, _rbfMutationSigmaRadius);
+            return new RbfGenomeFactory(
+                _agentFactory.BaseController.InputVectorLength,
+                _agentFactory.BaseController.OutputVectorLength, 
+                activationFnLibrary, _neatGenomeParams
+                );
+        }
+
+        public IGenomeDecoder<NeatGenome, IBlackBox> CreateGenomeDecoder()
+        {
+            return new NeatGenomeDecoder(_activationScheme);
+        }
+
+        protected NeatEvolutionAlgorithm<NeatGenome> CreateTrainEA()
+        {
+            _context = new TrainerContex();
+            // _context.Trainer = this;
 
             // Create a genome factory with our neat genome parameters object and the appropriate number of input and output neuron genes.
             IGenomeFactory<NeatGenome> genomeFactory = CreateGenomeFactory();

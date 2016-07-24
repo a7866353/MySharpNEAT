@@ -335,7 +335,6 @@ namespace MyProject01.Controller
             LogFile.WriteLine(_log.GetLog());
 
 
-
         }
 
     }
@@ -438,6 +437,7 @@ namespace MyProject01.Controller
             _agentFac.TrainDataLength = _trainBlockLength;
 
             Trainer trainer = new Trainer(_agentFac);
+            // RbfTrainer trainer = new RbfTrainer(_agentFac);
 
             trainer.CheckCtrl = CreateCheckCtrl();
             trainer.TestName = "";
