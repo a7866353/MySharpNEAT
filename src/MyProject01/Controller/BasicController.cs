@@ -220,7 +220,6 @@ namespace MyProject01.Controller
 
         private DataSourceCtrl _dataSourceCtrl;
         private INeuroNetwork _neuroNetwork;
-        private IDataSource _dataSource;
 
         private DataBlock[] _inDataCache;
 
@@ -293,7 +292,6 @@ namespace MyProject01.Controller
                 _sensor.DataSourceCtrl = value;
 
                 RateDataSourceParam param = new RateDataSourceParam(5);
-                _dataSource = _dataSourceCtrl.Get(param);
                 _currentPosition = Math.Max(_sensor.SkipCount, StartPosition);
             }
             get
