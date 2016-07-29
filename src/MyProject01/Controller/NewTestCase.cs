@@ -276,6 +276,7 @@ namespace MyProject01.Controller
             DealLogList logList = new DealLogList();
             int trainDealCount = 0;
             int trainedDataIndex = _testStartIndex;
+            bool isTrainResultSet = false;
             double startMoney = agent.InitMoney;
             double trainedMoney = 0;
             double endMoney = 0;
@@ -292,8 +293,9 @@ namespace MyProject01.Controller
 
                 // To large for test
                 // epsodeLog.DealLogs.Add(dealLog);
-                if (agent.CurrentIndex == trainedDataIndex)
+                if (isTrainResultSet==false && agent.CurrentIndex >= trainedDataIndex)
                 {
+                    isTrainResultSet = true;
                     trainedMoney = agent.CurrentValue;
                     // trainDealCount = dealCount;
                     trainDealCount = agent.DealCount;

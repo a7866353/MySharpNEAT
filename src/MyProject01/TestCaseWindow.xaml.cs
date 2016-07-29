@@ -42,6 +42,12 @@ namespace MyProject01
         }
     }
 
+    interface ITestCase
+    {
+        string Name { get; }
+        string Description { get; }
+        void Run();
+    }
     class TestCaseGroup : List<TestCaseObject>
     {
         public void Add(TestCaseGroup group)
@@ -55,6 +61,17 @@ namespace MyProject01
         {
             TestCaseObject obj = new TestCaseObject(testCase.TestCaseName, "", new TestCaseObject.TestFucntion(testCase.Run));
             Add(obj);
+        }
+
+        public void Add(ITestCase test)
+        {
+            TestCaseObject obj = new TestCaseObject(test.Name, test.Description, new TestCaseObject.TestFucntion(test.Run));
+            Add(obj);
+        }
+        public void Add(List<ITestCase> testList)
+        {
+            foreach (ITestCase tc in testList)
+                Add(tc);
         }
 
     }
@@ -443,6 +460,10 @@ namespace MyProject01
             newTestList.Add(new TestCaseObject("TestDataBaseViewer", "", new TestCaseObject.TestFucntion(TestDataBaseViewer)));
             newTestList.Add(new TestCaseObject("ControllerViewer", "", new TestCaseObject.TestFucntion(ControllerViewer)));
             newTestList.Add(new TestCaseObject("TestDataAnalyzer", "", new TestCaseObject.TestFucntion(TestDataAnalyzer)));
+
+
+            // Add Renko Test
+            newTestList.Add(RenkoTestCaseList.GetTest());
 
             // New test case
             AddNewTestCase(newTestList);
