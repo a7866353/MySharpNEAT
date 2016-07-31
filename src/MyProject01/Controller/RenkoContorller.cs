@@ -16,6 +16,11 @@ namespace MyProject01.Controller
         public int Index;
         public RateSet RateSet;
         public double Value;
+
+        public override string ToString()
+        {
+            return Value.ToString() + "|" + Index.ToString();
+        }
     } 
 
     class NormalRenkoCreator
@@ -46,7 +51,18 @@ namespace MyProject01.Controller
 
                 _currentRate = result;
                 blkList.Add(CreateBlock());
+
+#if false
+                if(blkList.Count>1)
+                {
+                    double diff = blkList[blkList.Count-1].RateSet.Close - blkList[blkList.Count-2].RateSet.Close;
+                    if (Math.Abs(diff) > Step*2)
+                        System.Console.WriteLine("error?");
+                }
+#endif
+                _index--;
             }
+
 
             return blkList.ToArray();
         }
@@ -100,9 +116,8 @@ namespace MyProject01.Controller
             Array.Copy(_valueArr, index, buffer, offset, length);
         }
 
-        public RenkoDataCtrl(RateSet[] rateSets)
+        public RenkoDataCtrl(RateSet[] rateSets, NormalRenkoCreator creator)
         {
-            NormalRenkoCreator creator = new NormalRenkoCreator();
             _renkoBlockArr = creator.Convert(rateSets);
 
             _valueArr = new double[Count];
@@ -284,6 +299,17 @@ namespace MyProject01.Controller
 
     #endregion
 
+    class RenkoParms
+    {
+        public int DataBlockLen = 32;
+        public double Step = 0.5;
+        public double StepMargin = 0.05;
+
+        public override string ToString()
+        {
+            return "Len=" + DataBlockLen + "Step=" + Step + "Marg=" + StepMargin;
+        }
+    }
     class RenkoContorller : IController
     {
         private DataSourceCtrl _dataSourceCtrl;
@@ -292,18 +318,26 @@ namespace MyProject01.Controller
         private IActor _actor;
         private RenkoDataCtrl _renkoDataCtrl;
         private int _currentPosition;
+        private int _currentRenkoArrPostion;
 
-        public int DataBlockLen = 32;
+
+        public RenkoParms RenkoParma;
         public int StartPosition = 0;
         private DataBlock[] _inDataCache;
 
+
+        public RenkoContorller(RenkoParms parms)
+        {
+            this.RenkoParma = parms;
+        }
         public DataSourceCtrl DataSourceCtrl
         {
             set 
             {
                 _dataSourceCtrl = value;
-                _renkoDataCtrl = new RenkoDataCtrl(_dataSourceCtrl.SourceLoader);
-                _sensor = CreateSensor(_renkoDataCtrl.ValueArr, DataBlockLen);
+                NormalRenkoCreator creator = new NormalRenkoCreator() { Step = RenkoParma.Step, StepMargin = RenkoParma.StepMargin };
+                _renkoDataCtrl = new RenkoDataCtrl(_dataSourceCtrl.SourceLoader, creator);
+                _sensor = CreateSensor(_renkoDataCtrl.ValueArr, RenkoParma.DataBlockLen);
                 _actor = new BasicActor();
 
                 _inDataCache = new DataBlock[_sensor.TotalLength];
@@ -370,6 +404,8 @@ namespace MyProject01.Controller
                 {
                     _currentPosition = _renkoDataCtrl[i-1].Index+1;
                 }
+
+                _currentRenkoArrPostion = i;
             }
         }
 
@@ -415,9 +451,16 @@ namespace MyProject01.Controller
         {
             get
             {
+#if false
+                int idx = _currentPosition;
+                RenkoBlock blk = _renkoDataCtrl.RenkoBlockArr[i];
+                if (idx == blk.Index)
+                {
+                    return idx;
+                }
                 for (int i = 0; i < _renkoDataCtrl.RenkoBlockArr.Length; i++)
                 {
-                    RenkoBlock blk = _renkoDataCtrl.RenkoBlockArr[i];
+                    
                     if (_currentPosition <= blk.Index)
                     {
                         return i;
@@ -426,6 +469,9 @@ namespace MyProject01.Controller
                 }
 
                 return _renkoDataCtrl.RenkoBlockArr.Length - 1;
+#else
+                return _currentRenkoArrPostion;
+#endif
             }
         }
 
@@ -452,16 +498,21 @@ namespace MyProject01.Controller
         private int _trainDataLength;
         private int _testDataLength;
 
+        private RenkoParms _renkoParms;
+
         public string Name
         {
-            get { return "Renko"; }
+            get { return "Renko" + _renkoParms.ToString(); }
         }
 
         public string Description
         {
-            get { return ""; }
+            get { return "Renko Test: " + _renkoParms.ToString(); }
         }
-
+        public RenkoTestCase(RenkoParms parms)
+        {
+            _renkoParms = parms;
+        }
         public void Run()
         {
             // Config Server IP
@@ -473,7 +524,7 @@ namespace MyProject01.Controller
             _loader = GetDataLoader();
             _loader.Load();
 
-            _testCtrl = new RenkoContorller();
+            _testCtrl = new RenkoContorller(_renkoParms);
             _testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
 
             int totalDataLength = _testCtrl.TotalLength - _startPosition;
@@ -543,9 +594,37 @@ namespace MyProject01.Controller
     {
         static public List<ITestCase> GetTest()
         {
+            int[] blkLen = new int[] { 64, 32, 16, 8 };
+            double[] StepArr = new double[] { 1.0, 0.5, 0.1, 0.05 };
+            double[] StepMarginArr = new double[] { 0.2, 0.1, 0.05 };
+
             List<ITestCase> testCaseList = new List<ITestCase>()
             {
-                new RenkoTestCase(),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=64, Step=0.5, StepMargin=0.05}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=0.5, StepMargin=0.05}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.5, StepMargin=0.05}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.05}),
+
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=1.0, StepMargin=0.05}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=1.0, StepMargin=0.05}),
+
+
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.0}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.1}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.2}),
+
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=64, Step=0.1, StepMargin=0.05}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=0.1, StepMargin=0.05}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.1, StepMargin=0.05}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.1, StepMargin=0.05}),
+
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=64, Step=0.05, StepMargin=0.02}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=0.05, StepMargin=0.02}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.05, StepMargin=0.02}),
+
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=0.5, StepMargin=0.1}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.5, StepMargin=0.1}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.1}),
 
             };
 
