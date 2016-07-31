@@ -159,7 +159,7 @@ namespace MyProject01.Util
             // Recent
             //---------------------------
             endDate = new DateTime(2016, 3, 13);
-
+#if false
             // M5
             startDate = endDate.AddMonths(-1);
             paramList.Add(new DataLoaderParam()
@@ -306,7 +306,7 @@ namespace MyProject01.Util
                 NeedTimeFrameConver = true,
                 IsDefault = false
             });
-
+#endif
             // Recent not cov
             //---------------------------
             endDate = new DateTime(2016, 3, 13);
@@ -335,7 +335,17 @@ namespace MyProject01.Util
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
-
+            startDate = endDate.AddMonths(-12);
+            paramList.Add(new DataLoaderParam()
+            {
+                TickerName = "USDJPY_5",
+                TimeFrame = DataTimeType.M5,
+                StartDate = startDate,
+                EndDate = endDate,
+                PreCount = _preCount,
+                NeedTimeFrameConver = false,
+                IsDefault = true
+            });
             startDate = endDate.AddYears(-2);
             paramList.Add(new DataLoaderParam()
             {
@@ -382,7 +392,6 @@ namespace MyProject01.Util
                 EndDate = endDate,
                 PreCount = _preCount,
                 NeedTimeFrameConver = false,
-                IsDefault = true
             });
 
             startDate = endDate.AddYears(-2);
@@ -475,9 +484,9 @@ namespace MyProject01.Util
             {
                 return new ServerIPParam[]
                 {
-                    new ServerIPParam(){ IP = "127.0.0.1", IsDefault = false},
-                    new ServerIPParam(){ IP = "192.168.1.11", IsDefault = false},
-                    new ServerIPParam(){ IP = "192.168.1.15", IsDefault = true},
+                    new ServerIPParam(){ IP = "127.0.0.1", IsDefault = true},
+                    new ServerIPParam(){ IP = "192.168.1.11"},
+                    new ServerIPParam(){ IP = "192.168.1.15"},
 
                 };
             }
@@ -488,11 +497,11 @@ namespace MyProject01.Util
     {
         // public static string ServerIP = "127.0.0.1";
         public static string ServerIP = "192.168.1.15";
-        public static int PopulationSize = 2048;
+        public static int PopulationSize = 5000;
         public static DataLoaderParam LoaderParam = null;
         public static double BuyOffset = 0.01;
         public static double SellOffset = 0.01;
-        public static int TrainingDataBlockLength = 32;
+        public static int TrainingDataBlockLength = 4096;
         public static int TrainingTryCount = 5;
     }
 
