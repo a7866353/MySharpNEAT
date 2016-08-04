@@ -135,10 +135,10 @@ namespace MyProject01.Controller
 
             _name = "SharpNEAT";
             _populationSize = CommonConfig.PopulationSize;
-            _specieCount = 10;
+            _specieCount = 100;
             _activationScheme = NetworkActivationScheme.CreateAcyclicScheme();
             _complexityRegulationStr = "Absolute";
-            _complexityThreshold = 10;
+            _complexityThreshold = 50;
             _description = "SharpNEAT Test";
             _parallelOptions = new ParallelOptions();
 
@@ -146,7 +146,7 @@ namespace MyProject01.Controller
             _eaParams.SpecieCount = _specieCount;
             _neatGenomeParams = new NeatGenomeParameters();
             _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
-            _neatGenomeParams.InitialInterconnectionsProportion = 0.1;
+            _neatGenomeParams.InitialInterconnectionsProportion = 0.3;
         }
 
         public void Initialize(string name, XmlElement xmlConfig)
