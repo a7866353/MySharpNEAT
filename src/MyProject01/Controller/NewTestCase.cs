@@ -267,6 +267,7 @@ namespace MyProject01.Controller
         }
         private void TestResult(NEATNetwork network, RateMarketTestDAO dao)
         {
+            int testStartIndex = 0;
             Controller.UpdateNetwork(network);
             LearnRateMarketAgent agent = new LearnRateMarketAgent(Controller);
             agent.Reset();
@@ -299,6 +300,7 @@ namespace MyProject01.Controller
                     trainedMoney = agent.CurrentValue;
                     // trainDealCount = dealCount;
                     trainDealCount = agent.DealCount;
+                    testStartIndex = logList.Count;
                 }
                 agent.Next();
 
@@ -329,6 +331,8 @@ namespace MyProject01.Controller
             // update dao
             dao.LastTestDataEarnRate = epsodeLog.UnTrainedDataEarnRate;
             dao.LastTrainedDataEarnRate = epsodeLog.TrainedDataEarnRate;
+            dao.TestDataStartIndex = testStartIndex;
+            dao.TotalDataCount = logList.Count;
 
             // update log
             _log.Set(LogFormater.ValueName.TrainScore, epsodeLog.TrainedDataEarnRate);
@@ -381,8 +385,6 @@ namespace MyProject01.Controller
 
                 agent.DoAction();
                 agent.Next();
-                if (agent.IsEnd == true)
-                    break;
             }
 
             _ctrlFactory.Free(ctrl);

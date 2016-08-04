@@ -561,11 +561,10 @@ namespace MyProject01.Controller
             // mainCheckCtrl.Add(new CheckNetworkChangeJob());
             // mainCheckCtrl.Add(new NewUpdateControllerJob(TestCaseName, _testCtrl.GetPacker()));
 
-            // TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
-            // subCheckCtrl.Add(new UpdateTestCaseJob() 
+            TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
             IController testCtrl = _ctrlFac.Get();
             testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
-            mainCheckCtrl.Add(new NewUpdateTestCaseJob()
+            subCheckCtrl.Add(new NewUpdateTestCaseJob()
             {
                 TestName = Name + "_" + DateTime.Now.ToString(),
 
@@ -582,7 +581,7 @@ namespace MyProject01.Controller
                 StartPosition = _startPosition,
             });
 
-            // mainCheckCtrl.Add(subCheckCtrl);
+            mainCheckCtrl.Add(subCheckCtrl);
             mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4, _trainTryCount));
             return mainCheckCtrl;
 
