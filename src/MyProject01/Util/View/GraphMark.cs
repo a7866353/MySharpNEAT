@@ -16,7 +16,7 @@ namespace MyProject01.Util.View
         private int _thickness;
         private Point _point;
         private double _width = 4;
-        private double _height = 8;
+        private double _height = 12;
 
         private Ellipse _referedShape;
 
@@ -46,10 +46,10 @@ namespace MyProject01.Util.View
             }
             _referedShape.StrokeThickness = _thickness;
             _referedShape.Stroke = this._color;
-            _referedShape.Width = (int)(_width);
-            _referedShape.Height = (int)(_height);
+            _referedShape.Width = (int)(_width * _thickness);
+            _referedShape.Height = (int)(_height * _thickness);
             _referedShape.VerticalAlignment = VerticalAlignment.Top;
-            _referedShape.Margin = new Thickness(_point.X * ScaleX -_width*0.5, _point.Y * ScaleY -_height * 0.5, 0, 0);
+            _referedShape.Margin = new Thickness(_point.X * ScaleX - _referedShape.Width * 0.5, _point.Y * ScaleY - _referedShape.Height * 0.5, 0, 0);
             // _referedShape.Margin = new Thickness(_point.X * ScaleX, _point.Y * ScaleY, 0, 0);
 
             if( isNew == true)

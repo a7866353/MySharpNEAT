@@ -110,7 +110,7 @@ namespace MyProject01.Win
             GraphLine moneyLine = logView.AddLineData(currentMoneyArr);
 
             // 增加训练标记
-            moneyLine.AddMark(_currentTestDao.TestDataStartIndex, Brushes.Black);
+            moneyLine.AddMark(_currentTestDao.TestDataStartIndex, Brushes.Black, 3);
             moneyLine.Update();
         }
 
