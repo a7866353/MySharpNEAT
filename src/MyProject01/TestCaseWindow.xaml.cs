@@ -462,8 +462,12 @@ namespace MyProject01
             newTestList.Add(new TestCaseObject("TestDataAnalyzer", "", new TestCaseObject.TestFucntion(TestDataAnalyzer)));
 
 
+            // Add Sequence Renko
+            newTestList.Add(RenkoSequenceTestCaseList.GetTest());
+
             // Add Renko Test
             newTestList.Add(RenkoTestCaseList.GetTest());
+
 
             // New test case
             AddNewTestCase(newTestList);

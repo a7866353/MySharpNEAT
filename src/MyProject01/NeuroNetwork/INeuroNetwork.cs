@@ -10,5 +10,7 @@ namespace MyProject01.NeuroNetwork
     public interface INeuroNetwork
     {
         DataBlock Compute(DataBlock data);
+
+        DataBlock Compute(DataBlock[] data);
     }
 }

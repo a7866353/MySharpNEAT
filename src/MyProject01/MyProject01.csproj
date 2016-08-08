@@ -109,6 +109,7 @@
     <Compile Include="Controller\BasicLearnCaseFactory.cs" />
     <Compile Include="Controller\ControllerPacker.cs" />
     <Compile Include="Controller\RenkoContorller.cs" />
+    <Compile Include="Controller\RenkoSequenceController.cs" />
     <Compile Include="DataBlock.cs" />
     <Compile Include="Controller\NewNetworkController.cs" />
     <Compile Include="Controller\NewTestCase.cs" />

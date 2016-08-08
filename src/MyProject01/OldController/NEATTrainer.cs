@@ -54,7 +54,27 @@ namespace MyProject01.Controller
             return _result;
         }
 
+
+
+        public DataBlock Compute(DataBlock[] data)
+        {
+            ISignalArray outputArr = _blockBox.OutputSignalArray;
+            _blockBox.ResetState();
+
+            for (int i = 0; i < data.Length;i++ )
+            {
+                ISignalArray inputArr = _blockBox.InputSignalArray;
+                inputArr.CopyFrom(data[i].Data, 0);
+                _blockBox.Activate();
+                if (_blockBox.IsStateValid == false)
+                    return null;
+
+            }
+            outputArr.CopyTo(_result.Data, 0);
+            return _result;
+        }
     }
+
     public class NewNormalScore : IPhenomeEvaluator<IBlackBox>
     {
         public AgentFactory _agentFactory;
