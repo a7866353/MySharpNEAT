@@ -149,12 +149,27 @@ namespace MyProject01.Controller
             get { return _epoch; }
         }
 
+        public int PopulationSize
+        {
+            set { _populationSize = value; }
+            get { return _populationSize; }
+        }
+        public int SpecieCount
+        {
+            set { _specieCount = value; }
+            get { return _specieCount; }
+        }
+        public int ComplexityThreshold
+        {
+            set { _complexityThreshold = value; }
+            get { return (int)_complexityThreshold; }
+        }
         public Trainer(AgentFactory agentFactory)
         {
             _agentFactory = agentFactory;
 
             _name = "SharpNEAT";
-            _populationSize = CommonConfig.PopulationSize;
+            _populationSize = 512;
             _specieCount = 100;
             _activationScheme = NetworkActivationScheme.CreateAcyclicScheme();
             _complexityRegulationStr = "Absolute";

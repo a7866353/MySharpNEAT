@@ -338,8 +338,8 @@ namespace MyProject01.Controller
                 NormalRenkoCreator creator = new NormalRenkoCreator() { Step = RenkoParma.Step, StepMargin = RenkoParma.StepMargin };
                 _renkoDataCtrl = new RenkoDataCtrl(_dataSourceCtrl.SourceLoader, creator);
                 _sensor = CreateSensor(_renkoDataCtrl.ValueArr, RenkoParma.DataBlockLen);
-                _actor = new BasicActor();
-
+                // _actor = new BasicActor();
+                _actor = new StateSwitchWithCloseActor();
                 _inDataCache = new DataBlock[_sensor.TotalLength];
                 for (int i = _sensor.SkipCount; i < _sensor.TotalLength; i++)
                 {
@@ -489,6 +489,7 @@ namespace MyProject01.Controller
         private RenkoContorller _testCtrl;
         private BasicTestDataLoader _loader;
         private AgentFactory _agentFac;
+        private Trainer _trainer;
 
         private double _testRate = 0.7;
         private int _startPosition = 50000;
@@ -502,7 +503,7 @@ namespace MyProject01.Controller
 
         public string Name
         {
-            get { return "Renko" + _renkoParms.ToString(); }
+            get { return "RenkoSwitch" + _renkoParms.ToString(); }
         }
 
         public string Description
@@ -539,15 +540,19 @@ namespace MyProject01.Controller
 
             _agentFac = new AgentFactory(_ctrlFac);
             _agentFac.StartPosition = _startPosition;
-            _agentFac.TrainDataLength = _trainBlockLength;
+            // _agentFac.TrainDataLength = _trainBlockLength;
+            _agentFac.TrainDataLength = _trainDataLength;
 
-            Trainer trainer = new Trainer(_agentFac);
+            _trainer = new Trainer(_agentFac);
+            _trainer.PopulationSize = CommonConfig.PopulationSize;
+            _trainer.SpecieCount = _trainer.PopulationSize / 10;
+            _trainer.ComplexityThreshold = 100;
             // RbfTrainer trainer = new RbfTrainer(_agentFac);
 
-            trainer.CheckCtrl = CreateCheckCtrl();
-            trainer.TestName = "";
+            _trainer.CheckCtrl = CreateCheckCtrl();
+            _trainer.TestName = "";
 
-            trainer.RunTestCase();
+            _trainer.RunTestCase();
         }
 
         private BasicTestDataLoader GetDataLoader()
@@ -561,16 +566,18 @@ namespace MyProject01.Controller
             // mainCheckCtrl.Add(new CheckNetworkChangeJob());
             // mainCheckCtrl.Add(new NewUpdateControllerJob(TestCaseName, _testCtrl.GetPacker()));
 
-            TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
+            // TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
             IController testCtrl = _ctrlFac.Get();
             testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
-            subCheckCtrl.Add(new NewUpdateTestCaseJob()
+            mainCheckCtrl.Add(new NewUpdateTestCaseJob()
             {
                 TestName = Name + "_" + DateTime.Now.ToString(),
 
                 TestDescription = Name + "|" +
                     CommonConfig.LoaderParam.ToString() + "|" +
-                    "P=" + CommonConfig.PopulationSize + "|" +
+                    "P=" + _trainer.PopulationSize + "|" +
+                    "S=" + _trainer.SpecieCount +"|" +
+                    "C=" + _trainer.ComplexityThreshold + "|" +
                     "Offset=" + CommonConfig.BuyOffset + "," + CommonConfig.SellOffset + "|" +
                     "TrnBlk=" + _trainBlockLength + "," + "TrnCnt=" + _trainTryCount
                     ,
@@ -581,8 +588,8 @@ namespace MyProject01.Controller
                 StartPosition = _startPosition,
             });
 
-            mainCheckCtrl.Add(subCheckCtrl);
-            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4, _trainTryCount));
+            // mainCheckCtrl.Add(subCheckCtrl);
+            // mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4, _trainTryCount));
             return mainCheckCtrl;
 
         }
@@ -604,6 +611,8 @@ namespace MyProject01.Controller
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.5, StepMargin=0.05}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.05}),
 
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=64, Step=1.0, StepMargin=0.05}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=1.0, StepMargin=0.05}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=1.0, StepMargin=0.05}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=1.0, StepMargin=0.05}),
 
@@ -612,6 +621,7 @@ namespace MyProject01.Controller
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.1}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.2}),
 
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=128, Step=0.1, StepMargin=0.05}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=64, Step=0.1, StepMargin=0.05}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=0.1, StepMargin=0.05}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.1, StepMargin=0.05}),
@@ -621,6 +631,10 @@ namespace MyProject01.Controller
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=0.05, StepMargin=0.02}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.05, StepMargin=0.02}),
 
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=512, Step=0.5, StepMargin=0.1}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=256, Step=0.5, StepMargin=0.1}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=128, Step=0.5, StepMargin=0.1}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=64, Step=0.5, StepMargin=0.1}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=0.5, StepMargin=0.1}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.5, StepMargin=0.1}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.1}),

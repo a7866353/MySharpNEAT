@@ -487,6 +487,7 @@ namespace MyProject01.Util
                     new ServerIPParam(){ IP = "127.0.0.1", IsDefault = true},
                     new ServerIPParam(){ IP = "192.168.1.11"},
                     new ServerIPParam(){ IP = "192.168.1.15"},
+                    new ServerIPParam(){ IP = "192.168.1.16"},
 
                 };
             }

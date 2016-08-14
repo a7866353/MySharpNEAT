@@ -274,10 +274,10 @@ namespace MyProject01.Controller
             // mainCheckCtrl.Add(new CheckNetworkChangeJob());
             // mainCheckCtrl.Add(new NewUpdateControllerJob(TestCaseName, _testCtrl.GetPacker()));
 
-            TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
+            // TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
             IController testCtrl = _ctrlFac.Get();
             testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
-            subCheckCtrl.Add(new NewUpdateTestCaseJob()
+            mainCheckCtrl.Add(new NewUpdateTestCaseJob()
             {
                 TestName = Name + "_" + DateTime.Now.ToString(),
 
@@ -294,7 +294,7 @@ namespace MyProject01.Controller
                 StartPosition = _startPosition,
             });
 
-            mainCheckCtrl.Add(subCheckCtrl);
+            // mainCheckCtrl.Add(subCheckCtrl);
             mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4, _trainTryCount));
             return mainCheckCtrl;
 
@@ -324,6 +324,13 @@ namespace MyProject01.Controller
                 new RenkoSequenceTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.05, StepMargin=0.02}, 8),
                 new RenkoSequenceTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.05, StepMargin=0.02}, 16),
 
+                new RenkoSequenceTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.1}, 4),
+                new RenkoSequenceTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.1}, 8),
+                new RenkoSequenceTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.1}, 16),
+
+                new RenkoSequenceTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.5, StepMargin=0.1}, 4),
+                new RenkoSequenceTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.5, StepMargin=0.1}, 8),
+                new RenkoSequenceTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.5, StepMargin=0.1}, 16),
 
             };
 
