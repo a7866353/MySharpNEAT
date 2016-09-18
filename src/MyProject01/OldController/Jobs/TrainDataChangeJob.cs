@@ -24,7 +24,7 @@ namespace MyProject01.Controller.Jobs
             _trainCount = trainCount;
 
             _currentStartPos = _startPosition;
-            _maxPos = _startPosition + len;
+            _maxPos = _startPosition + len - trainCount;
         }
         public bool Do(TrainerContex context)
         {
@@ -41,7 +41,7 @@ namespace MyProject01.Controller.Jobs
             }
 
             _agentFac.StartPosition = _currentStartPos;
-
+            _agentFac.TrainDataLength = _trainCount;
             return true;
         }
     }

@@ -368,12 +368,14 @@ namespace MyProject01.Controller
 
         public int SkipCount
         {
-            get { return _renkoDataCtrl[_sensor.SkipCount].Index; }
+            // get { return _renkoDataCtrl[_sensor.SkipCount].Index; }
+            get { return _sensor.SkipCount; }
         }
 
         public int TotalLength
         {
-            get { return _renkoDataCtrl[_renkoDataCtrl.Count-1].Index+1; }
+            // get { return _renkoDataCtrl[_renkoDataCtrl.Count-1].Index+1; }
+            get { return _sensor.TotalLength; }
         }
 
         public int CurrentPosition
@@ -384,28 +386,7 @@ namespace MyProject01.Controller
             }
             set
             {
-                int i;
-                for( i=0;i<_renkoDataCtrl.RenkoBlockArr.Length; i++)
-                {
-                    RenkoBlock blk = _renkoDataCtrl.RenkoBlockArr[i];
-                    if(value < blk.Index)
-                    {
-                        _currentPosition = _renkoDataCtrl[i].Index;
-                        break;
-                    }
-                    else if(value == blk.Index)
-                    {
-                        _currentPosition = value;
-                        break;
-                    }
-                }
-
-                if (i == _renkoDataCtrl.RenkoBlockArr.Length)
-                {
-                    _currentPosition = _renkoDataCtrl[i-1].Index+1;
-                }
-
-                _currentRenkoArrPostion = i;
+                _currentPosition = value;
             }
         }
 
@@ -413,13 +394,13 @@ namespace MyProject01.Controller
         {
             get 
             {
-                return _renkoDataCtrl[CurrentRenkoBlockIndex].RateSet;
+                return _renkoDataCtrl[_currentPosition].RateSet;
             }
         }
 
         public MarketActions GetAction()
         {
-            DataBlock output = _neuroNetwork.Compute(_inDataCache[CurrentRenkoBlockIndex]);
+            DataBlock output = _neuroNetwork.Compute(_inDataCache[_currentPosition]);
 
             MarketActions result = _actor.GetAction(output);
             return result;
@@ -445,6 +426,30 @@ namespace MyProject01.Controller
 
             _currentPosition = Math.Max(_sensor.SkipCount, StartPosition);
             return ctrl;
+        }
+
+        public int SearchForPositionByIndex(int index)
+        {
+            int i;
+            for (i = 0; i < _renkoDataCtrl.RenkoBlockArr.Length; i++)
+            {
+                RenkoBlock blk = _renkoDataCtrl.RenkoBlockArr[i];
+                if (index < blk.Index)
+                {
+                    break;
+                }
+                else if (index == blk.Index)
+                {
+                    break;
+                }
+            }
+
+            if (i == _renkoDataCtrl.RenkoBlockArr.Length)
+            {
+                i--;
+            }
+
+            return i;
         }
 
         private int CurrentRenkoBlockIndex
@@ -479,6 +484,8 @@ namespace MyProject01.Controller
         {
             return new RevertSensor(new StateNormallzeSensor(new BlockSensor(buffer, len+1)));
         }
+
+
         
 
     }
@@ -493,9 +500,10 @@ namespace MyProject01.Controller
 
         private double _testRate = 0.7;
         private int _startPosition = 50000;
-        private int _trainBlockLength = 32;
+        private int _trainBlockLength = 512;
         private int _trainTryCount = 2;
 
+        private int _startDataPosition;
         private int _trainDataLength;
         private int _testDataLength;
 
@@ -528,9 +536,12 @@ namespace MyProject01.Controller
             _testCtrl = new RenkoContorller(_renkoParms);
             _testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
 
-            int totalDataLength = _testCtrl.TotalLength - _startPosition;
-            _trainDataLength = (int)(totalDataLength * _testRate);
-            _testDataLength = totalDataLength - _trainDataLength;
+            _startDataPosition = _testCtrl.SearchForPositionByIndex(_startPosition);
+            int trainEndPosition = _testCtrl.SearchForPositionByIndex(_startPosition + (int)((_loader.Count - _startPosition) * _testRate));
+            int testEndPosition = _testCtrl.SearchForPositionByIndex(_loader.Count);
+
+            _trainDataLength = trainEndPosition - _startDataPosition;
+            _testDataLength = testEndPosition - _startDataPosition - _trainDataLength;
 
 
             RenkoContorller trainCtrl = (RenkoContorller)_testCtrl.Clone();
@@ -539,9 +550,9 @@ namespace MyProject01.Controller
 
 
             _agentFac = new AgentFactory(_ctrlFac);
-            _agentFac.StartPosition = _startPosition;
+            _agentFac.StartPosition = _startDataPosition;
             // _agentFac.TrainDataLength = _trainBlockLength;
-            _agentFac.TrainDataLength = _trainDataLength;
+            _agentFac.TrainDataLength = _trainBlockLength;
 
             _trainer = new Trainer(_agentFac);
             _trainer.PopulationSize = CommonConfig.PopulationSize;
@@ -585,11 +596,11 @@ namespace MyProject01.Controller
                 Controller = testCtrl,
                 TrainDataLength = _trainDataLength,
                 TestDataLength = _testDataLength,
-                StartPosition = _startPosition,
+                StartPosition = _startDataPosition,
             });
 
             // mainCheckCtrl.Add(subCheckCtrl);
-            // mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4, _trainTryCount));
+            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startDataPosition, _trainBlockLength, _trainBlockLength / 4, _trainTryCount));
             return mainCheckCtrl;
 
         }
@@ -638,6 +649,7 @@ namespace MyProject01.Controller
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=32, Step=0.5, StepMargin=0.1}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=16, Step=0.5, StepMargin=0.1}),
                 new RenkoTestCase(new RenkoParms(){ DataBlockLen=8, Step=0.5, StepMargin=0.1}),
+                new RenkoTestCase(new RenkoParms(){ DataBlockLen=4, Step=0.5, StepMargin=0.1}),
 
             };
 
