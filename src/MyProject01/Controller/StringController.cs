@@ -29,7 +29,7 @@ namespace MyProject01.Controller
             // Config Server IP
             DataBaseAddress.SetIP(CommonConfig.ServerIP);
 
-            _trainBlockLength = CommonConfig.TrainingDataBlockLength;
+
             _trainTryCount = CommonConfig.TrainingTryCount;
             _dataSrcCtrl = new DataSources.CSVSourceCtrl(GetLoaderPath());
 
@@ -39,6 +39,10 @@ namespace MyProject01.Controller
             int totalDataLength = _testCtrl.TotalLength - _startPosition;
             _trainDataLength = (int)(totalDataLength * _testRate);
             _testDataLength = totalDataLength - _trainDataLength;
+
+            _trainBlockLength = CommonConfig.TrainingDataBlockLength;
+            if (_trainBlockLength == 0)
+                _trainBlockLength = _trainDataLength;
 
             _testCtrl.Normilize_Array(0, 0.5);
             // _testCtrl.Normilize2(0, 0.1);
@@ -91,7 +95,7 @@ namespace MyProject01.Controller
             });
 
             // mainCheckCtrl.Add(subCheckCtrl);
-            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4, _trainTryCount));
+            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength, _trainTryCount));
             return mainCheckCtrl;
 
         }

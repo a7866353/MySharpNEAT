@@ -10,21 +10,24 @@ namespace MyProject01.Controller.Jobs
     {
         private AgentFactory _agentFac;
         private int _startPosition;
-        private int _stepOffset;
+        private int _blockLen;
         private int _maxPos;
         private int _trainCount = 2;
 
         private int _currentStartPos;
 
-        public TrainDataChangeJob(AgentFactory agentFac, int startPos, int len, int stepOffset,  int trainCount)
+        public TrainDataChangeJob(AgentFactory agentFac, int startPos, int len, int blockLen,  int trainCount)
         {
             _agentFac = agentFac;
             _startPosition = startPos;
-            _stepOffset = stepOffset;
+            _blockLen = blockLen;
             _trainCount = trainCount;
-
             _currentStartPos = _startPosition;
-            _maxPos = _startPosition + len - trainCount;
+            _maxPos = _startPosition + len - blockLen;
+
+            _agentFac.StartPosition = _currentStartPos;
+            _agentFac.TrainDataLength = blockLen;
+
         }
         public bool Do(TrainerContex context)
         {
@@ -37,11 +40,10 @@ namespace MyProject01.Controller.Jobs
             }
             else
             {
-                _currentStartPos = Math.Min(_currentStartPos + _stepOffset, _maxPos);
+                _currentStartPos = Math.Min(_currentStartPos + _blockLen/4, _maxPos);
             }
 
             _agentFac.StartPosition = _currentStartPos;
-            _agentFac.TrainDataLength = _trainCount;
             return true;
         }
     }

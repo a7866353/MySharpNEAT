@@ -543,6 +543,8 @@ namespace MyProject01.Controller
             _trainDataLength = trainEndPosition - _startDataPosition;
             _testDataLength = testEndPosition - _startDataPosition - _trainDataLength;
 
+            if (_trainBlockLength == 0)
+                _trainBlockLength = _trainDataLength;
 
             RenkoContorller trainCtrl = (RenkoContorller)_testCtrl.Clone();
             trainCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader); // TODO
@@ -600,7 +602,7 @@ namespace MyProject01.Controller
             });
 
             // mainCheckCtrl.Add(subCheckCtrl);
-            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startDataPosition, _trainBlockLength, _trainBlockLength / 4, _trainTryCount));
+            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startDataPosition, _trainBlockLength, _trainBlockLength, _trainTryCount));
             return mainCheckCtrl;
 
         }

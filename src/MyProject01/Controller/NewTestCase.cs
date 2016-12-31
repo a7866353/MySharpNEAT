@@ -425,10 +425,14 @@ namespace MyProject01.Controller
             _trainDataLength = (int)(totalDataLength * _testRate);
             _testDataLength = totalDataLength - _trainDataLength;
 
-            // _testCtrl.Normilize(0, 0.1);
+            if (_trainBlockLength == 0)
+                _trainBlockLength = _trainDataLength;
+
+
+            _testCtrl.Normilize_Array(0, 0.5);
             // _testCtrl.Normilize2(0, 0.1);
             // _testCtrl.Normilize3();
-            _testCtrl.Normilize_None();
+            // _testCtrl.Normilize_None();
 
 
             BasicControllerWithCache trainCtrl = (BasicControllerWithCache)_testCtrl.Clone();
@@ -477,7 +481,7 @@ namespace MyProject01.Controller
             });
 
             // mainCheckCtrl.Add(subCheckCtrl);
-            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4, _trainTryCount));
+            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength, _trainTryCount));
             return mainCheckCtrl;
 
         }
