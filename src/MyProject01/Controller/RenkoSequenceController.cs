@@ -14,7 +14,7 @@ namespace MyProject01.Controller
 
     class RenkoSequenceController : IController
     {
-        private DataSourceCtrl _dataSourceCtrl;
+        private IDataSourceCtrl _dataSourceCtrl;
         private INeuroNetwork _neuroNetwork;
         private ISensor _sensor;
         private IActor _actor;
@@ -37,7 +37,7 @@ namespace MyProject01.Controller
             _inDataBuffer = new DataBlock[count];
         }
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -239,7 +239,7 @@ namespace MyProject01.Controller
             _loader.Load();
 
             _testCtrl = new RenkoSequenceController(_renkoParms, _sequenceCount);
-            _testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
+            _testCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader);
 
             int totalDataLength = _testCtrl.TotalLength - _startPosition;
             _trainDataLength = (int)(totalDataLength * _testRate);
@@ -247,7 +247,7 @@ namespace MyProject01.Controller
 
 
             RenkoSequenceController trainCtrl = (RenkoSequenceController)_testCtrl.Clone();
-            trainCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader); // TODO
+            trainCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader);
             _ctrlFac = new ControllerFactory(trainCtrl);
 
 
@@ -270,7 +270,7 @@ namespace MyProject01.Controller
             return CommonConfig.LoaderParam.GetLoader();
         }
 
-        private ICheckJob CreateCheckCtrl()
+        private ICheckJob CreateCheckCtrl() 
         {
             TrainResultCheckSyncController mainCheckCtrl = new TrainResultCheckSyncController();
             // mainCheckCtrl.Add(new CheckNetworkChangeJob());
@@ -278,7 +278,7 @@ namespace MyProject01.Controller
 
             // TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
             IController testCtrl = _ctrlFac.Get();
-            testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
+            testCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader);
             mainCheckCtrl.Add(new NewUpdateTestCaseJob()
             {
                 TestName = Name + "_" + DateTime.Now.ToString(),
@@ -297,7 +297,7 @@ namespace MyProject01.Controller
             });
 
             // mainCheckCtrl.Add(subCheckCtrl);
-            // mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 4, _trainTryCount));
+            mainCheckCtrl.Add(new TrainDataChangeJob(_agentFac, _startPosition, _trainDataLength, _trainBlockLength / 8, _trainTryCount));
             return mainCheckCtrl;
 
         }

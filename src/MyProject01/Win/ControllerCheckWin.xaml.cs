@@ -84,7 +84,7 @@ namespace MyProject01.Win
                 };
             loader.Load();
 
-            _ctrl.DataSourceCtrl = new DataSources.DataSourceCtrl(loader);
+            _ctrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(loader);
             LearnRateMarketAgent agent = new LearnRateMarketAgent(_ctrl);
             agent.Reset();
             agent.SetRange(_preCount, _ctrl.TotalLength);

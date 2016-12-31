@@ -9,6 +9,6 @@ namespace MyProject01.DataSources
     public interface IDataSourceParam
     {
         bool CompareTo(IDataSourceParam param);
-        IDataSource Create(DataSourceCtrl ctrl);
+        IDataSource Create(IDataSourceCtrl ctrl);
     }
 }

@@ -13,7 +13,7 @@ namespace MyProject01.DataSources.DataSourceParams
         private DataBlock _dataBuffer;
         private double _lengthLimit;
 
-        public FixDataSource(DataSourceCtrl ctrl, double lengthLimit = 1.0)
+        public FixDataSource(IDataSourceCtrl ctrl, double lengthLimit = 1.0)
         {
             _rateSet = ctrl.SourceLoader;
             _dataBuffer = new DataBlock((int)(_rateSet.Length * lengthLimit));
@@ -86,7 +86,7 @@ namespace MyProject01.DataSources.DataSourceParams
         }
 
      
-        public IDataSource Create(DataSourceCtrl ctrl)
+        public IDataSource Create(IDataSourceCtrl ctrl)
         {
             return new FixDataSource(ctrl, _lengthLimit);
         }
@@ -106,7 +106,7 @@ namespace MyProject01.DataSources.DataSourceParams
         private int _m1 = 3;
         private int _m2 = 3;
 
-        public KDJDataSource(DataSourceCtrl loader, int aveRange, int m1, int m2) 
+        public KDJDataSource(IDataSourceCtrl loader, int aveRange, int m1, int m2) 
         {
             _rateArr = loader.SourceLoader;
 
@@ -260,7 +260,7 @@ namespace MyProject01.DataSources.DataSourceParams
             return true;
         }
 
-        public IDataSource Create(DataSourceCtrl ctrl)
+        public IDataSource Create(IDataSourceCtrl ctrl)
         {
             KDJDataSource src = new KDJDataSource(ctrl, AveRange, M1, M2);
             return src;
@@ -280,7 +280,7 @@ namespace MyProject01.DataSources.DataSourceParams
         private int _m1 = 3;
         private int _m2 = 3;
 
-        public MADataSource(DataSourceCtrl loader, int aveCount)
+        public MADataSource(IDataSourceCtrl loader, int aveCount)
         {
             _aveCount = aveCount;
         }
@@ -378,10 +378,69 @@ namespace MyProject01.DataSources.DataSourceParams
             return true;
         }
 
-        public IDataSource Create(DataSourceCtrl ctrl)
+        public IDataSource Create(IDataSourceCtrl ctrl)
         {
             MADataSource src = new MADataSource(ctrl, Count);
             return src;
+        }
+    }
+
+    class StringSourceParam : IDataSourceParam
+    {
+        private string _name;
+        public StringSourceParam(string name)
+        {
+            _name = name;
+        }
+
+        public bool CompareTo(IDataSourceParam param)
+        {
+            if (this.GetType() != param.GetType())
+                return false;
+
+            StringSourceParam inParam = (StringSourceParam)param;
+            do
+            {
+                if (inParam._name != this._name)
+                    return false;
+
+            } while (false);
+
+            return true;
+        }
+
+        public IDataSource Create(IDataSourceCtrl ctrl)
+        {
+            return null;
+        }
+    }
+    class StringDataSource : IDataSource
+    {
+        IDataSourceCtrl _sourceCtrl;
+        private DataBlock _data;
+        public StringDataSource(IDataSourceCtrl srcCtrl, DataBlock data)
+        {
+            _sourceCtrl = srcCtrl;
+            _data = data;
+        }
+        public void Copy(int index, DataBlock buffer, int offset, int length)
+        {
+            _data.CopyTo(index, buffer, offset, length);
+        }
+
+        public int TotalLength
+        {
+            get { return _data.Length; }
+        }
+
+        public int SkipCount
+        {
+            get { return 0; }
+        }
+
+        public RateSet this[int index]
+        {
+            get { return _sourceCtrl.SourceLoader[index]; }
         }
     }
 

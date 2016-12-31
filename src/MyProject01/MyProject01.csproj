@@ -110,6 +110,7 @@
     <Compile Include="Controller\ControllerPacker.cs" />
     <Compile Include="Controller\RenkoContorller.cs" />
     <Compile Include="Controller\RenkoSequenceController.cs" />
+    <Compile Include="Controller\StringController.cs" />
     <Compile Include="DataBlock.cs" />
     <Compile Include="Controller\NewNetworkController.cs" />
     <Compile Include="Controller\NewTestCase.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="TestCaseWindow.xaml.cs">
       <DependentUpon>TestCaseWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Util\CVSWriter.cs" />
     <Compile Include="Win\ControllerCheckWin.xaml.cs">
       <DependentUpon>ControllerCheckWin.xaml</DependentUpon>
     </Compile>

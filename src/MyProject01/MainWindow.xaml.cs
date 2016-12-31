@@ -101,7 +101,7 @@ namespace MyProject01
         }
         private void WriteText(string str)
         {
-            this.Dispatcher.BeginInvoke (new func(delegate
+            this.Dispatcher.Invoke (new func(delegate
             {
                 if (OutputTextBox.Text.Length > 50000)
                     OutputTextBox.Clear();

@@ -16,7 +16,7 @@ namespace MyProject01.Controller
         int TotalLength { get; }
         int DataBlockLength { get; }
         IDataSource DataSource { get; }
-        DataSourceCtrl DataSourceCtrl { set; }
+        IDataSourceCtrl DataSourceCtrl { set; }
         int Copy(int index, DataBlock buffer, int offset);
         void Init();
         ISensor Clone();
@@ -92,7 +92,7 @@ namespace MyProject01.Controller
         }
 
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -170,7 +170,7 @@ namespace MyProject01.Controller
         }
 
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -258,7 +258,7 @@ namespace MyProject01.Controller
         }
 
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -387,7 +387,7 @@ namespace MyProject01.Controller
         }
 
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -553,7 +553,7 @@ namespace MyProject01.Controller
         }
 
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -684,7 +684,7 @@ namespace MyProject01.Controller
         }
 
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -744,7 +744,7 @@ namespace MyProject01.Controller
             get { return _dataSource; }
         }
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -925,7 +925,7 @@ namespace MyProject01.Controller
             get { return _source.DataSource; }
         }
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set { _source.DataSourceCtrl = value; }
         }
@@ -983,7 +983,7 @@ namespace MyProject01.Controller
             get { return _source.DataSource; }
         }
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set { _source.DataSourceCtrl = value; }
         }
@@ -1050,7 +1050,7 @@ namespace MyProject01.Controller
             get { return _sen1.DataSource; }
         }
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set 
             {
@@ -1350,7 +1350,7 @@ namespace MyProject01.Controller
             get { return _sourceSen.DataSource; }
         }
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set { _sourceSen.DataSourceCtrl = value; }
         }
@@ -1410,7 +1410,7 @@ namespace MyProject01.Controller
             get { return _sourceSen.DataSource; }
         }
 
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set { _sourceSen.DataSourceCtrl = value; }
         }

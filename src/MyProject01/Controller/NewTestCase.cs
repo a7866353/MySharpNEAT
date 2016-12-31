@@ -419,7 +419,7 @@ namespace MyProject01.Controller
             _loader.Load();
 
             _testCtrl = new BasicControllerWithCache(GetSensor(), GetActor()) { StartPosition = _startPosition };
-            _testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
+            _testCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader);
 
             int totalDataLength = _testCtrl.TotalLength - _startPosition;
             _trainDataLength = (int)(totalDataLength * _testRate);
@@ -428,11 +428,11 @@ namespace MyProject01.Controller
             // _testCtrl.Normilize(0, 0.1);
             // _testCtrl.Normilize2(0, 0.1);
             // _testCtrl.Normilize3();
-            _testCtrl.Normilize4();
+            _testCtrl.Normilize_None();
 
 
             BasicControllerWithCache trainCtrl = (BasicControllerWithCache)_testCtrl.Clone();
-            trainCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader); // TODO
+            trainCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader); // TODO
             _ctrlFac = new ControllerFactory(trainCtrl);
 
 
@@ -458,7 +458,7 @@ namespace MyProject01.Controller
             // TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
             // subCheckCtrl.Add(new UpdateTestCaseJob() 
             IController testCtrl = _ctrlFac.Get();
-            testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
+            testCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader);
             mainCheckCtrl.Add(new NewUpdateTestCaseJob()
             {
                 TestName = TestCaseName + "_" + DateTime.Now.ToString(),

@@ -62,6 +62,12 @@ namespace MyProject01
             TestCaseObject obj = new TestCaseObject(testCase.TestCaseName, "", new TestCaseObject.TestFucntion(testCase.Run));
             Add(obj);
         }
+        public void Add(BasicStringTestCase testCase)
+        {
+            TestCaseObject obj = new TestCaseObject(testCase.TestCaseName, "", new TestCaseObject.TestFucntion(testCase.Run));
+            Add(obj);
+        }
+        
 
         public void Add(ITestCase test)
         {
@@ -396,7 +402,7 @@ namespace MyProject01
             {
                 BasicTestDataLoader _loader = NewTestDataPacket.GetRecnetM30_3Month();
                 _loader.Load();
-                DataSourceCtrl dsc = new DataSources.DataSourceCtrl(_loader);
+                IDataSourceCtrl dsc = new DataSources.LoaderSourceCtrl(_loader);
                 ISensor Sensor = new RateWaveletSensor(64, new Daubechies20Wavelet(), 4);
                 Sensor.DataSourceCtrl = dsc;
 
@@ -453,6 +459,23 @@ namespace MyProject01
 
             group.Add(g);
         }
+        private void CVSWriter()
+        {
+            this.Dispatcher.BeginInvoke(new Func(delegate()
+            {
+                LogFile.WriteLine("========================");
+                LogFile.WriteLine("CVSWriter");
+                LogFile.WriteLine("========================");
+                LogFile.WriteLine("Start");
+                BasicTestDataLoader _loader = NewTestDataPacket.GetRecnetM30_3Month();
+                _loader.Load();
+                CVSWriter w = new CVSWriter();
+                w.Write("RateSet.csv", _loader);
+                LogFile.WriteLine("Finish!");
+
+            }));
+        }
+
         private void AddTestCase()
         {
 
@@ -460,7 +483,9 @@ namespace MyProject01
             newTestList.Add(new TestCaseObject("TestDataBaseViewer", "", new TestCaseObject.TestFucntion(TestDataBaseViewer)));
             newTestList.Add(new TestCaseObject("ControllerViewer", "", new TestCaseObject.TestFucntion(ControllerViewer)));
             newTestList.Add(new TestCaseObject("TestDataAnalyzer", "", new TestCaseObject.TestFucntion(TestDataAnalyzer)));
+            newTestList.Add(new TestCaseObject("CVSWriter", "", new TestCaseObject.TestFucntion(CVSWriter)));
 
+            newTestList.Add(StringTestCaseList.GetTest());
 
             // Add Sequence Renko
             newTestList.Add(RenkoSequenceTestCaseList.GetTest());

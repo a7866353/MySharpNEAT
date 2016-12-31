@@ -12,7 +12,7 @@ namespace MyProject01.Controller
 {
     public interface IController
     {
-        DataSourceCtrl DataSourceCtrl { set; }
+        IDataSourceCtrl DataSourceCtrl { set; }
         void UpdateNetwork(INeuroNetwork network);
 
         int InputVectorLength { get; }
@@ -58,7 +58,7 @@ namespace MyProject01.Controller
         private DataBlock _inData;
         private int _currentPosition;
 
-        private DataSourceCtrl _dataSourceCtrl;
+        private IDataSourceCtrl _dataSourceCtrl;
         private INeuroNetwork _neuroNetwork;
         private IDataSource _dataSource;
         public BasicController(ISensor sensor, IActor actor)
@@ -137,7 +137,7 @@ namespace MyProject01.Controller
             _currentPosition = _sensor.SkipCount;
             return ctrl;
         }
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -218,7 +218,7 @@ namespace MyProject01.Controller
         
         private int _currentPosition;
 
-        private DataSourceCtrl _dataSourceCtrl;
+        private IDataSourceCtrl _dataSourceCtrl;
         private INeuroNetwork _neuroNetwork;
 
         private DataBlock[] _inDataCache;
@@ -284,7 +284,7 @@ namespace MyProject01.Controller
             _currentPosition = Math.Max(_sensor.SkipCount , StartPosition);
             return ctrl;
         }
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
@@ -306,7 +306,7 @@ namespace MyProject01.Controller
             return packer;
         }
 
-        public void Normilize(double middleValue, double limit)
+        public void Normilize_Array(double middleValue, double limit)
         {
             ArrayDataNormalizeAnalyzer norm = new ArrayDataNormalizeAnalyzer(new NormalizeAnalyzer(middleValue, limit / 2, limit));
             DataBlock buffer = new DataBlock(InputVectorLength);
@@ -340,7 +340,7 @@ namespace MyProject01.Controller
             }
 
         }
-        public void Normilize2(double middleValue, double limit)
+        public void Normilize_AllSame(double middleValue, double limit)
         {
             NormalizeAnalyzer norm = new NormalizeAnalyzer(middleValue, limit, limit * 2);
             DataBlock buffer = new DataBlock(InputVectorLength);
@@ -410,7 +410,7 @@ namespace MyProject01.Controller
             }
 
         }
-        public void Normilize4()
+        public void Normilize_None()
         {
             DataBlock buffer = new DataBlock(InputVectorLength);
 

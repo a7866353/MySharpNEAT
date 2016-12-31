@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using SharpNeat.Network;
+using System.Threading.Tasks;
 
 namespace SharpNeat.Genomes.Neat
 {
@@ -66,9 +67,33 @@ namespace SharpNeat.Genomes.Neat
         {
             // ENHANCEMENT: List.Foreach() is potentially faster than a foreach loop. 
             // http://diditwith.net/2006/10/05/PerformanceOfForeachVsListForEach.aspx
+#if true
             foreach(NeuronGene srcGene in copyFrom) {
                 Add(srcGene.CreateCopy());
             }
+#else
+
+            NeuronGene[] srcArr = new NeuronGene[copyFrom.Count];
+            NeuronGene[] dstArr = new NeuronGene[copyFrom.Count];
+            int i = 0;
+            foreach (NeuronGene srcGene in copyFrom)
+            {
+                srcArr[i] = srcGene;
+                i++;
+            }
+
+            Parallel.For(0, copyFrom.Count, idx =>
+                {
+                    dstArr[idx] = srcArr[idx].CreateCopy();
+                });
+
+            foreach (NeuronGene srcGene in dstArr)
+            {
+                Add(srcGene.CreateCopy());
+            }
+
+
+#endif
         }
 
         #endregion

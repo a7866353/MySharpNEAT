@@ -160,7 +160,7 @@ namespace MyProject01.Controller
             get { throw new NotImplementedException(); }
         }
 
-        public DataSources.DataSourceCtrl DataSourceCtrl
+        public DataSources.IDataSourceCtrl DataSourceCtrl
         {
             set { throw new NotImplementedException(); }
         }
@@ -212,7 +212,7 @@ namespace MyProject01.Controller
             get { throw new NotImplementedException(); }
         }
 
-        public DataSources.DataSourceCtrl DataSourceCtrl
+        public DataSources.IDataSourceCtrl DataSourceCtrl
         {
             set { throw new NotImplementedException(); }
         }
@@ -271,7 +271,7 @@ namespace MyProject01.Controller
             get { throw new NotImplementedException(); }
         }
 
-        public DataSources.DataSourceCtrl DataSourceCtrl
+        public DataSources.IDataSourceCtrl DataSourceCtrl
         {
             set { throw new NotImplementedException(); }
         }
@@ -312,7 +312,7 @@ namespace MyProject01.Controller
     }
     class RenkoContorller : IController
     {
-        private DataSourceCtrl _dataSourceCtrl;
+        private IDataSourceCtrl _dataSourceCtrl;
         private INeuroNetwork _neuroNetwork;
         private ISensor _sensor;
         private IActor _actor;
@@ -330,7 +330,7 @@ namespace MyProject01.Controller
         {
             this.RenkoParma = parms;
         }
-        public DataSourceCtrl DataSourceCtrl
+        public IDataSourceCtrl DataSourceCtrl
         {
             set 
             {
@@ -534,7 +534,7 @@ namespace MyProject01.Controller
             _loader.Load();
 
             _testCtrl = new RenkoContorller(_renkoParms);
-            _testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
+            _testCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader);
 
             _startDataPosition = _testCtrl.SearchForPositionByIndex(_startPosition);
             int trainEndPosition = _testCtrl.SearchForPositionByIndex(_startPosition + (int)((_loader.Count - _startPosition) * _testRate));
@@ -545,7 +545,7 @@ namespace MyProject01.Controller
 
 
             RenkoContorller trainCtrl = (RenkoContorller)_testCtrl.Clone();
-            trainCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader); // TODO
+            trainCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader); // TODO
             _ctrlFac = new ControllerFactory(trainCtrl);
 
 
@@ -579,7 +579,7 @@ namespace MyProject01.Controller
 
             // TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
             IController testCtrl = _ctrlFac.Get();
-            testCtrl.DataSourceCtrl = new DataSources.DataSourceCtrl(_loader);
+            testCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader);
             mainCheckCtrl.Add(new NewUpdateTestCaseJob()
             {
                 TestName = Name + "_" + DateTime.Now.ToString(),
