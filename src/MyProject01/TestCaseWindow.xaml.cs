@@ -24,6 +24,7 @@ using MyProject01.Controller;
 
 using System.Threading;
 using MyProject01.DataSources;
+using MyProject01.RProjects;
 
 namespace MyProject01
 {
@@ -467,7 +468,12 @@ namespace MyProject01
                 LogFile.WriteLine("CVSWriter");
                 LogFile.WriteLine("========================");
                 LogFile.WriteLine("Start");
-                BasicTestDataLoader _loader = NewTestDataPacket.GetRecnetM30_3Month();
+                BasicTestDataLoader _loader;
+
+                // _loader = NewTestDataPacket.GetRecnetM30_3Month();
+                // _loader = NewTestDataPacket.GetRecentM5_3Month();
+                _loader = NewTestDataPacket.GetCurrentM30_3Month();
+
                 _loader.Load();
                 CVSWriter w = new CVSWriter();
                 w.Write("RateSet.csv", _loader);
@@ -481,6 +487,8 @@ namespace MyProject01
 
             TestCaseGroup newTestList = new TestCaseGroup();
             newTestList.Add(new TestCaseObject("TestDataBaseViewer", "", new TestCaseObject.TestFucntion(TestDataBaseViewer)));
+            newTestList.Add(new TestCaseObject("RTest", "", new TestCaseObject.TestFucntion(RTest)));
+
             newTestList.Add(new TestCaseObject("ControllerViewer", "", new TestCaseObject.TestFucntion(ControllerViewer)));
             newTestList.Add(new TestCaseObject("TestDataAnalyzer", "", new TestCaseObject.TestFucntion(TestDataAnalyzer)));
             newTestList.Add(new TestCaseObject("CVSWriter", "", new TestCaseObject.TestFucntion(CVSWriter)));
@@ -499,6 +507,35 @@ namespace MyProject01
 
             TestCaseList.Add(newTestList);
 
+        }
+
+        private void RTest()
+        {
+            this.Dispatcher.BeginInvoke(new Func(delegate()
+            {
+                RUtility ru = new RUtility();
+                BasicTestDataLoader loader = NewTestDataPacket.GetRecnetM30_3Month();
+                loader.Load();
+
+                int startPos = 50000;
+                int allDataLen = loader.Count - startPos;
+                int trainLen = allDataLen * 2 / 3;
+                int testLen = allDataLen - trainLen;
+
+                RateSet[] trainData = new RateSet[trainLen];
+                for(int i=0;i<trainLen; i++)
+                {
+                    trainData[i] = loader[startPos+i];
+                }
+
+                RateSet[] testData = new RateSet[testLen];
+                for (int i = 0; i < testData.Length; i++)
+                {
+                    testData[i] = loader[startPos + trainLen + i];
+                }
+
+                double[] res = ru.TrainAndTest(trainData, testData);
+            }));
         }
     }
 }

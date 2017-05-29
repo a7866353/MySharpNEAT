@@ -70,6 +70,10 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DynamicInterop, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicInterop.0.7.4\lib\net40\DynamicInterop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MongoDB.Bson, Version=1.9.1.221, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\MongoDB.Bson.dll</HintPath>
@@ -78,9 +82,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="RDotNet, Version=1.6.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\R.NET.Community.1.6.5\lib\net40\RDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RDotNet.NativeLibrary, Version=1.6.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\R.NET.Community.1.6.5\lib\net40\RDotNet.NativeLibrary.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -103,6 +116,7 @@
     <Compile Include="BasicNet.cs" />
     <Compile Include="BasicTestCase.cs" />
     <Compile Include="BasicTestParameterSet.cs" />
+    <Compile Include="BasicTrainer.cs" />
     <Compile Include="BasicTrainingMethod.cs" />
     <Compile Include="Controller\BasicActor.cs" />
     <Compile Include="Controller\BasicController.cs" />
@@ -168,6 +182,10 @@
     <Compile Include="Factorys\PopulationFactorys\BasicPopulationFactory.cs" />
     <Compile Include="Factorys\PopulationFactorys\NormalPopulationFactory.cs" />
     <Compile Include="Reinforcement\QLearn.cs" />
+    <Compile Include="RProjects\RController.cs" />
+    <Compile Include="RProjects\RTestCase.cs" />
+    <Compile Include="RProjects\RTrainer.cs" />
+    <Compile Include="RProjects\RUtility.cs" />
     <Compile Include="StateSpliter\StateSplitController.cs" />
     <Compile Include="StateSpliter\ValueSortSpliter.cs" />
     <Compile Include="TestCaseFactory.cs" />
@@ -283,6 +301,7 @@
     <None Include="data.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
