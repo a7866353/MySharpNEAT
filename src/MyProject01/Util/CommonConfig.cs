@@ -48,10 +48,22 @@ namespace MyProject01.Util
 
             // Current
             //------------------------------
-
-            // M1
             endDate = DateTime.Now;
             startDate = endDate.AddMonths(-1);
+
+            // bar
+            paramList.Add(new DataLoaderParam()
+            {
+                TickerName = "---Current---",
+                TimeFrame = DataTimeType.M1,
+                StartDate = startDate,
+                EndDate = endDate,
+                PreCount = _preCount,
+                NeedTimeFrameConver = false,
+                IsDefault = false
+            });
+            
+            // M1
             paramList.Add(new DataLoaderParam()
             {
                 TickerName = "USDJPY_1",
@@ -60,33 +72,6 @@ namespace MyProject01.Util
                 EndDate = endDate,
                 PreCount = _preCount,
                 NeedTimeFrameConver = false,
-                IsDefault = false
-            });
-
-            // M30
-            endDate = DateTime.Now;
-            startDate = endDate.AddMonths(-1);
-            paramList.Add(new DataLoaderParam()
-            {
-                TickerName = "USDJPY_1",
-                TimeFrame = DataTimeType.M30,
-                StartDate = startDate,
-                EndDate = endDate,
-                PreCount = _preCount,
-                NeedTimeFrameConver = true,
-                IsDefault = false
-            });
-
-            endDate = DateTime.Now;
-            startDate = endDate.AddMonths(-3);
-            paramList.Add(new DataLoaderParam()
-            {
-                TickerName = "USDJPY_1",
-                TimeFrame = DataTimeType.M30,
-                StartDate = startDate,
-                EndDate = endDate,
-                PreCount = _preCount,
-                NeedTimeFrameConver = true,
                 IsDefault = false
             });
 
@@ -130,7 +115,17 @@ namespace MyProject01.Util
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
-
+            startDate = endDate.AddMonths(-12);
+            paramList.Add(new DataLoaderParam()
+            {
+                TickerName = "USDJPY_5",
+                TimeFrame = DataTimeType.M5,
+                StartDate = startDate,
+                EndDate = endDate,
+                PreCount = _preCount,
+                NeedTimeFrameConver = false,
+                IsDefault = false
+            });
             // M30
             startDate = endDate.AddMonths(-1);
             paramList.Add(new DataLoaderParam()
@@ -155,10 +150,56 @@ namespace MyProject01.Util
                 NeedTimeFrameConver = false,
                 IsDefault = false
             });
-
+            startDate = endDate.AddMonths(-12);
+            paramList.Add(new DataLoaderParam()
+            {
+                TickerName = "USDJPY_30",
+                TimeFrame = DataTimeType.M30,
+                StartDate = startDate,
+                EndDate = endDate,
+                PreCount = _preCount,
+                NeedTimeFrameConver = false,
+                IsDefault = false
+            });
+            startDate = endDate.AddMonths(-24);
+            paramList.Add(new DataLoaderParam()
+            {
+                TickerName = "USDJPY_30",
+                TimeFrame = DataTimeType.M30,
+                StartDate = startDate,
+                EndDate = endDate,
+                PreCount = _preCount,
+                NeedTimeFrameConver = false,
+                IsDefault = false
+            });            
+            startDate = endDate.AddMonths(-12*10);
+            paramList.Add(new DataLoaderParam()
+            {
+                TickerName = "USDJPY_30",
+                TimeFrame = DataTimeType.M30,
+                StartDate = startDate,
+                EndDate = endDate,
+                PreCount = _preCount,
+                NeedTimeFrameConver = false,
+                IsDefault = false
+            });            
+            
             // Recent
             //---------------------------
             endDate = new DateTime(2016, 3, 13);
+
+            startDate = endDate.AddMonths(-1);
+            paramList.Add(new DataLoaderParam()
+            {
+                TickerName = "--EndTo 16/03/13---",
+                TimeFrame = DataTimeType.M5,
+                StartDate = startDate,
+                EndDate = endDate,
+                PreCount = _preCount,
+                NeedTimeFrameConver = true,
+                IsDefault = false
+            });
+
 #if false
             // M5
             startDate = endDate.AddMonths(-1);

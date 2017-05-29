@@ -43,6 +43,8 @@ namespace MyProject01.Controller
             _trainBlockLength = CommonConfig.TrainingDataBlockLength;
             if (_trainBlockLength == 0)
                 _trainBlockLength = _trainDataLength;
+            else if (_trainBlockLength > _trainDataLength)
+                _trainBlockLength = _trainDataLength;
 
             _testCtrl.Normilize_Array(0, 0.5);
             // _testCtrl.Normilize2(0, 0.1);

@@ -545,6 +545,8 @@ namespace MyProject01.Controller
 
             if (_trainBlockLength == 0)
                 _trainBlockLength = _trainDataLength;
+            else if (_trainBlockLength > _trainDataLength)
+                _trainBlockLength = _trainDataLength;
 
             RenkoContorller trainCtrl = (RenkoContorller)_testCtrl.Clone();
             trainCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader); // TODO

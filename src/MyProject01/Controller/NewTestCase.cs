@@ -46,6 +46,39 @@ namespace MyProject01.Controller
             // loader.Load();
             return loader;
         }
+        static public BasicTestDataLoader GetCurrentM30_12Month()
+        {
+            DateTime EndDateTime = DateTime.Now;
+            DateTime StartDateTime = EndDateTime.AddMonths(-12);
+            BasicTestDataLoader loader =
+                new TestDataDateRangeLoader("USDJPY_30", DataTimeType.M30, StartDateTime, EndDateTime, 50000) { NeedTimeFrameConver = false };
+            // new TestDataDateRangeLoader("USDJPY_1", DataTimeType.M30, StartDateTime, EndDateTime, 50000) { NeedTimeFrameConver = true };
+
+            // loader.Load();
+            return loader;
+        }
+        static public BasicTestDataLoader GetCurrentM5_3Month()
+        {
+            DateTime EndDateTime = DateTime.Now;
+            DateTime StartDateTime = EndDateTime.AddMonths(-3);
+            BasicTestDataLoader loader =
+                new TestDataDateRangeLoader("USDJPY_5", DataTimeType.M5, StartDateTime, EndDateTime, 50000) { NeedTimeFrameConver = false };
+            // new TestDataDateRangeLoader("USDJPY_1", DataTimeType.M30, StartDateTime, EndDateTime, 50000) { NeedTimeFrameConver = true };
+
+            // loader.Load();
+            return loader;
+        }
+        static public BasicTestDataLoader GetCurrentM5_12Month()
+        {
+            DateTime EndDateTime = DateTime.Now;
+            DateTime StartDateTime = EndDateTime.AddMonths(-12);
+            BasicTestDataLoader loader =
+                new TestDataDateRangeLoader("USDJPY_5", DataTimeType.M5, StartDateTime, EndDateTime, 50000) { NeedTimeFrameConver = false };
+            // new TestDataDateRangeLoader("USDJPY_1", DataTimeType.M30, StartDateTime, EndDateTime, 50000) { NeedTimeFrameConver = true };
+
+            // loader.Load();
+            return loader;
+        }
         static public BasicTestDataLoader GetRecentM5_1Month()
         {
             DateTime StartDateTime = new DateTime(2016, 2, 13);

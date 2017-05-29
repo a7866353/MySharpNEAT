@@ -126,10 +126,13 @@ namespace MyProject01.DataSources
                 }
                 catch(Exception e)
                 {
+#if false
                     if (_dataList.Count == 0)
                         _dataList.Add(0);
                     else
                         _dataList.Add(_dataList[_dataList.Count-1]);
+#endif
+                    _dataList.Add(double.NaN);
                 }
             }
             public string Name
@@ -177,6 +180,8 @@ namespace MyProject01.DataSources
             {
                 bool isFind = false;
                 string name = titleArr[i].ToLower();
+                if (string.IsNullOrWhiteSpace(name) == true)
+                    continue;
                 for(int spIdx=0; spIdx<spName.Length;spIdx++)
                 {
                     if( name.CompareTo(spName[spIdx]) == 0 )
