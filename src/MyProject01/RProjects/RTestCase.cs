@@ -55,7 +55,13 @@ namespace MyProject01.RProjects
             _agentFac.StartPosition = _startPosition;
             _agentFac.TrainDataLength = _trainBlockLength;
 
-            RTrainer trainer = new RTrainer(_agentFac, CreateCheckCtrl());
+            RTrainerData data = new RTrainerData()
+            {
+                  Data = _loader.ToArray(),
+                  StartPosition = _startPosition,
+                  Length = _trainDataLength
+            };
+            RTrainer trainer = new RTrainer(CreateCheckCtrl(), data);
 
             trainer.TestName = "";
 

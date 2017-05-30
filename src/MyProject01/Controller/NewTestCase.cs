@@ -287,9 +287,9 @@ namespace MyProject01.Controller
 
             }
 
-            _epoch = context.Epoch;
+            _epoch = _context.Epoch;
             _testStartIndex = StartPosition + TrainDataLength;
-            TestResult(context.BestNetwork, _testCaseDAO);
+            TestResult(_context.BestNetwork, _testCaseDAO);
 
             _testCaseDAO.NetworkData = null;
             _testCaseDAO.Step = _epoch;
@@ -298,7 +298,7 @@ namespace MyProject01.Controller
             return true;
 
         }
-        private void TestResult(NEATNetwork network, RateMarketTestDAO dao)
+        private void TestResult(INeuroNetwork network, RateMarketTestDAO dao)
         {
             int testStartIndex = 0;
             Controller.UpdateNetwork(network);

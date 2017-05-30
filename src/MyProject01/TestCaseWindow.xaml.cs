@@ -488,6 +488,7 @@ namespace MyProject01
             TestCaseGroup newTestList = new TestCaseGroup();
             newTestList.Add(new TestCaseObject("TestDataBaseViewer", "", new TestCaseObject.TestFucntion(TestDataBaseViewer)));
             newTestList.Add(new TestCaseObject("RTest", "", new TestCaseObject.TestFucntion(RTest)));
+            newTestList.Add(new TestCaseObject("RTestCase", "", new TestCaseObject.TestFucntion(RTestCaseTest)));
 
             newTestList.Add(new TestCaseObject("ControllerViewer", "", new TestCaseObject.TestFucntion(ControllerViewer)));
             newTestList.Add(new TestCaseObject("TestDataAnalyzer", "", new TestCaseObject.TestFucntion(TestDataAnalyzer)));
@@ -507,6 +508,12 @@ namespace MyProject01
 
             TestCaseList.Add(newTestList);
 
+        }
+
+        private void RTestCaseTest()
+        {
+            RTestCase testcase = new RTestCase();
+            testcase.Run();
         }
 
         private void RTest()

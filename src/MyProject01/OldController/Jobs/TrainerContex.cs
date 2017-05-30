@@ -1,4 +1,5 @@
-﻿using MyProject01.Util.DataObject;
+﻿using MyProject01.NeuroNetwork;
+using MyProject01.Util.DataObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace MyProject01.Controller.Jobs
 
         // TestCase
 
-        public NEATNetwork BestNetwork;
+        public INeuroNetwork BestNetwork;
         public double Fitness;
 
         public TrainerContex()

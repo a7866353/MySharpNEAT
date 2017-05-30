@@ -12,20 +12,30 @@ namespace MyProject01.RProjects
 {
     class RController : IController
     {
-        private int _skipCount;
         private int _totalLength;
         private int _currentPosition;
 
         private IDataSourceCtrl _dataSourceCtrl;
         private INeuroNetwork _neuroNetwork;
+        private RNetwork _network;
+        
 
         public int StartPosition = 0;
+        
+        public RController()
+        {
+
+        }
 
         public IDataSourceCtrl DataSourceCtrl
         {
             set
             {
                 _dataSourceCtrl = value;
+                if (_network != null)
+                    _network.IsInited = false;
+
+                _totalLength = _dataSourceCtrl.SourceLoader.Length;
             }
             get
             {
@@ -35,22 +45,23 @@ namespace MyProject01.RProjects
 
         public void UpdateNetwork(NeuroNetwork.INeuroNetwork network)
         {
-            throw new NotImplementedException();
+            _network = (RNetwork)network;
+            _network.IsInited = false;
         }
 
         public int InputVectorLength
         {
-            get { throw new NotImplementedException(); }
+            get { return _network.InputNum; }
         }
 
         public int OutputVectorLength
         {
-            get { throw new NotImplementedException(); }
+            get { return _network.OutputNum; }
         }
 
         public int SkipCount
         {
-            get { return _skipCount; }
+            get { return StartPosition; }
         }
 
         public int TotalLength
@@ -78,7 +89,15 @@ namespace MyProject01.RProjects
 
         public MarketActions GetAction()
         {
-            throw new NotImplementedException();
+            if( _network.IsInited == false)
+                _network.SetData(_dataSourceCtrl.SourceLoader, StartPosition, TotalLength-StartPosition);
+
+            // TODO: RateSet和Action可能存在对不上的情况。现在+1之后，得到的结果最佳，但是问题原因不明。
+            int offset = CurrentPosition - StartPosition + 1;
+            if (offset >= (TotalLength - StartPosition))
+                offset = (TotalLength - StartPosition - 1);
+
+            return _network.GetAction(offset);
         }
 
         public RateSet GetRateSet(DateTime time)
@@ -93,7 +112,7 @@ namespace MyProject01.RProjects
 
         public IController Clone()
         {
-            throw new NotImplementedException();
+            return (IController)MemberwiseClone();
         }
 
         public int GetIndexByTime(DateTime time)
@@ -101,9 +120,7 @@ namespace MyProject01.RProjects
             return _dataSourceCtrl.GetIndexByTime(time);
         }
 
-
-
-
-
     }
+
+  
 }

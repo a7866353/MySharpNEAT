@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using MyProject01.NeuroNetwork;
+using MyProject01.Controller.Jobs;
 
 namespace MyProject01
 {
@@ -31,7 +32,6 @@ namespace MyProject01
 
         private long _epoch;
 
-        private AgentFactory _agentFactory;
         private ResultEvaluator _evaluator;
 
         protected long Epoch
@@ -39,9 +39,8 @@ namespace MyProject01
             get { return _epoch; }
         }
 
-        public BasicTrainer(AgentFactory agentFactory, ICheckJob checkCtrl)
+        public BasicTrainer(ICheckJob checkCtrl)
         {
-            _agentFactory = agentFactory;
             _evaluator = new ResultEvaluator(checkCtrl);
 
         }
@@ -89,7 +88,14 @@ namespace MyProject01
         }
         public void Test(EvaluationgContext context)
         {
-
+            TrainerContex c = new TrainerContex();
+            c.Epoch = context.Epoch;
+            c.StartDate = context.StartDate;
+            c.BestNetwork = context.Network;
+            c.ControllerName = "222";
+            c.CurrentDate = context.CurrentDate;
+            c.Fitness = context.Fitness;
+            _mainCheckCtrl.Do(c);
         }
         public void Stop()
         {

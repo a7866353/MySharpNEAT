@@ -55,7 +55,7 @@ namespace MyProject01.Controller.Jobs
             return true;
 
         }
-        private void TestResult(NEATNetwork network, RateMarketTestDAO dao)
+        private void TestResult(MyProject01.NeuroNetwork.INeuroNetwork network, RateMarketTestDAO dao)
         {
             RateMarketAgent agent = new RateMarketAgent(TestDataBlock);
             DecisionCtrl.UpdateNetwork(network);
