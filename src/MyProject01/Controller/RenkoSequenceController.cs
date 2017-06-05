@@ -193,6 +193,12 @@ namespace MyProject01.Controller
         }
 
 
+
+
+        public BasicControllerPacker GetPacker()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     class RenkoSequenceTestCase : ITestCase

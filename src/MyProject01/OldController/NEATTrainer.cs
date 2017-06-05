@@ -73,6 +73,12 @@ namespace MyProject01.Controller
             outputArr.CopyTo(_result.Data, 0);
             return _result;
         }
+
+
+        public BasicControllerPacker GetPacker()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class NewNormalScore : IPhenomeEvaluator<IBlackBox>

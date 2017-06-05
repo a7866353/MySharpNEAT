@@ -234,6 +234,23 @@ namespace MyProject01.RProjects
 
             return singleArr;
         }
+        
+        static public byte[] Serialize(SymbolicExpression obj)
+        {
+            var serialize = Execute("ObjToRaw").AsFunction();
+            byte[] raw = serialize.Invoke(new SymbolicExpression[] { obj }).AsRaw().ToArray();
+
+            return raw;
+        }
+
+        static public SymbolicExpression Deserialize(byte[] raw)
+        {
+            var deserialize = Execute("RawToOjb").AsFunction();
+            var rawObj = _engine.CreateRawVector(raw);
+            SymbolicExpression obj = deserialize.Invoke(new SymbolicExpression[] { rawObj });
+
+            return obj;
+        }
 
         static private void Test01()
         {
@@ -290,6 +307,13 @@ namespace MyProject01.RProjects
         private SymbolicExpression _net;
         private RateSet[] _data;
 
+        public RNetwork(byte[] net, int inputNum, int outputNum)
+        {
+            _inputNum = inputNum;
+            _outputNum = outputNum;
+            _net = RUtility.Deserialize(net);
+        }
+
         public RNetwork(SymbolicExpression net, int inputNum, int outputNum)
         {
             _inputNum = inputNum;
@@ -300,6 +324,7 @@ namespace MyProject01.RProjects
         {
             throw new NotImplementedException();
         }
+
 
         public DataBlock Compute(DataBlock[] data)
         {
@@ -320,6 +345,16 @@ namespace MyProject01.RProjects
                 return MarketActions.Buy;
             else
                 return MarketActions.Sell;
+        }
+
+         public BasicControllerPacker GetPacker()
+        {
+            BasicControllerPacker packer = new RControllerPacker(
+                   RUtility.Serialize(_net),
+                   _inputNum,
+                   _outputNum
+                );
+            return packer;
         }
     }
 }

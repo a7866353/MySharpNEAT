@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpNeatLib", "SharpNeatLib\SharpNeatLib.csproj", "{ABC5C77A-DEBA-420C-926C-BD3E6F37AE15}"
@@ -17,6 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpNeatDomainsExtra", "SharpNeatDomainsExtra\SharpNeatDomainsExtra.csproj", "{3A1B9DEC-AECE-42F3-BAD9-9172482C43AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyProject01", "MyProject01\MyProject01.csproj", "{29120FF9-2405-498A-9D15-C22158A0D704}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketPipeClient", "SocketPipeClient\SocketPipeClient.csproj", "{93D259B5-5A13-4E5F-B5A7-40E991E996E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +135,20 @@ Global
 		{29120FF9-2405-498A-9D15-C22158A0D704}.Release|x64.Build.0 = Release|x64
 		{29120FF9-2405-498A-9D15-C22158A0D704}.Release|x86.ActiveCfg = Release|x86
 		{29120FF9-2405-498A-9D15-C22158A0D704}.Release|x86.Build.0 = Release|x86
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Debug|x64.ActiveCfg = Debug|x64
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Debug|x64.Build.0 = Debug|x64
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Release|x64.ActiveCfg = Release|x64
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Release|x64.Build.0 = Release|x64
+		{93D259B5-5A13-4E5F-B5A7-40E991E996E7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

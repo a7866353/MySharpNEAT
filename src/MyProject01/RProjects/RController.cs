@@ -93,10 +93,13 @@ namespace MyProject01.RProjects
                 _network.SetData(_dataSourceCtrl.SourceLoader, StartPosition, TotalLength-StartPosition);
 
             // TODO: RateSet和Action可能存在对不上的情况。现在+1之后，得到的结果最佳，但是问题原因不明。
+#if false
             int offset = CurrentPosition - StartPosition + 1;
             if (offset >= (TotalLength - StartPosition))
                 offset = (TotalLength - StartPosition - 1);
-
+#else
+            int offset = CurrentPosition - StartPosition;
+#endif
             return _network.GetAction(offset);
         }
 
@@ -120,6 +123,35 @@ namespace MyProject01.RProjects
             return _dataSourceCtrl.GetIndexByTime(time);
         }
 
+
+
+        public BasicControllerPacker GetPacker()
+        {
+            return _network.GetPacker();
+        }
+    }
+
+    [Serializable]
+    public class RControllerPacker : BasicControllerPacker
+    {
+        private byte[] _netData;
+        private int _inNum;
+        private int _outNum;
+        public RControllerPacker(byte[] netData, int inNum, int outNum)
+        {
+            _netData = netData;
+            _inNum = inNum;
+            _outNum = outNum;
+        }
+
+        public override IController GetController()
+        {
+            RNetwork net = new RNetwork(_netData, _inNum, _outNum);
+            IController ctrl = new RController();
+            ctrl.UpdateNetwork(net);
+                
+            return ctrl;
+        }
     }
 
   

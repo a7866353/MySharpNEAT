@@ -74,6 +74,7 @@ namespace MyProject01.RProjects
 
             IController testCtrl = _ctrlFac.Get();
             testCtrl.DataSourceCtrl = new DataSources.LoaderSourceCtrl(_loader);
+            mainCheckCtrl.Add(new NewUpdateControllerJob(TestCaseName));
             mainCheckCtrl.Add(new NewUpdateTestCaseJob()
             {
                 TestName = CreateDatetime.ToString() + ": " + TestCaseName,

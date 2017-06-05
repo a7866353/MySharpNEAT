@@ -21,7 +21,9 @@ namespace MyProject01.DAO
     }
     class MarketRateDatabaseConnector
     {
-        public static string DatabaseName = "MarketRateDB_160312";
+        public static string DatabaseName = "MarketRateDB_170103";
+
+        //public static string DatabaseName = "MarketRateDB_160312";
         // public static string DatabaseName = "MarketRateDB_160322";
         public static string ConnectionString = DataBaseAddress.ConnectionString;
         // public static string ConnectionString = @"mongodb://127.0.0.1";

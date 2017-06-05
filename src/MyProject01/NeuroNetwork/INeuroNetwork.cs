@@ -1,4 +1,5 @@
-﻿using MyProject01.DataSources;
+﻿using MyProject01.Controller;
+using MyProject01.DataSources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace MyProject01.NeuroNetwork
         DataBlock Compute(DataBlock data);
 
         DataBlock Compute(DataBlock[] data);
+
+        BasicControllerPacker GetPacker();
     }
 }

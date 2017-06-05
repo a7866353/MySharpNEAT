@@ -11,37 +11,15 @@ using System.Threading.Tasks;
 namespace MyProject01.Controller
 {
 
-    public interface IControllerPacker
-    {
-        IController GetController();
-    }
-
     [Serializable]
-    class ControllerPacker : IControllerPacker
+    public abstract class BasicControllerPacker
     {
-        private ISensor _sensor;
-        private IActor _actor;
-        private INeuroNetwork _neuroNetwork;
-        private Normalizer[] _norm;
-
-        public INeuroNetwork NeuroNetwork
-        {
-            set { _neuroNetwork = value; }
-        }
-        static public ControllerPacker FromBinary(byte[] data)
+        static public BasicControllerPacker FromBinary(byte[] data)
         {
             MemoryStream stream = new MemoryStream(data);
             BinaryFormatter formatter = new BinaryFormatter();
-            ControllerPacker obj = (ControllerPacker)formatter.Deserialize(stream);
+            BasicControllerPacker obj = (BasicControllerPacker)formatter.Deserialize(stream);
             return obj;
-        }
-
-        public ControllerPacker(ISensor sensor, IActor actor, INeuroNetwork net, Normalizer[] norm)
-        {
-            _sensor = sensor;
-            _actor = actor;
-            _neuroNetwork = net;
-            _norm = norm;
         }
 
         public byte[] GetData()
@@ -54,7 +32,35 @@ namespace MyProject01.Controller
             return data;
         }
 
-        public IController GetController()
+        abstract public IController GetController();
+    }
+
+   
+
+    [Serializable]
+    class ControllerPacker : BasicControllerPacker
+    {
+        private ISensor _sensor;
+        private IActor _actor;
+        private INeuroNetwork _neuroNetwork;
+        private Normalizer[] _norm;
+
+        public INeuroNetwork NeuroNetwork
+        {
+            set { _neuroNetwork = value; }
+        }
+
+
+        public ControllerPacker(ISensor sensor, IActor actor, INeuroNetwork net, Normalizer[] norm)
+        {
+            _sensor = sensor;
+            _actor = actor;
+            _neuroNetwork = net;
+            _norm = norm;
+        }
+
+
+        public override IController GetController()
         {
             BasicController ctrl = new BasicController(_sensor, _actor);
             ctrl.UpdateNetwork(_neuroNetwork);

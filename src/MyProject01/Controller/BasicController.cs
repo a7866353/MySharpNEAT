@@ -27,6 +27,8 @@ namespace MyProject01.Controller
         RateSet GetRateSet(DateTime time);
         RateSet GetRateSet(int pos);
 
+        BasicControllerPacker GetPacker();
+
         IController Clone();
     }
 
@@ -207,6 +209,12 @@ namespace MyProject01.Controller
         public int OutputVectorLength
         {
             get { return _actor.DataLength; }
+        }
+
+
+        BasicControllerPacker IController.GetPacker()
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -452,6 +460,12 @@ namespace MyProject01.Controller
         public int OutputVectorLength
         {
             get { return _actor.DataLength; }
+        }
+
+
+        BasicControllerPacker IController.GetPacker()
+        {
+            throw new NotImplementedException();
         }
     }
 

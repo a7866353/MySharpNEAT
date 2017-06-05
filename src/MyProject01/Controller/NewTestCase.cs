@@ -211,20 +211,18 @@ namespace MyProject01.Controller
     }
     class NewUpdateControllerJob : ICheckJob
     {
-#if false
-        private ControllerPacker _packer;
+#if true
         private string _caseName;
-        public NewUpdateControllerJob(string caseName, ControllerPacker packer)
+        public NewUpdateControllerJob(string caseName)
         {
             _caseName = caseName;
-            _packer = packer;
         }
 
 
         public bool Do(TrainerContex context)
         {
-            if (context.IsChanged == false)
-                return true;
+//            if (context.IsChanged == false)
+//                return true;
 
             // ControllerDAOV2 dao = ControllerDAOV2.GetDAOByName("Controller"+DateTime.Now);
             ControllerDAOV2 dao = new ControllerDAOV2();
@@ -232,18 +230,13 @@ namespace MyProject01.Controller
             dao.CaseName = _caseName;
             dao.StepNum = (int)context.Epoch;
             dao.UpdateTime = DateTime.Now;
-            _packer.NeuroNetwork = context.BestNetwork;
-            dao.ControllerData = _packer.GetData();
+            dao.ControllerData = context.BestNetwork.GetPacker().GetData();
             dao.Save();
             context.ControllerName = dao.Name;
 
             return true;
         }
 #endif
-        public bool Do(TrainerContex context)
-        {
-            throw new NotImplementedException();
-        }
     }
     class NewUpdateTestCaseJob : ICheckJob
     {
@@ -490,7 +483,7 @@ namespace MyProject01.Controller
         {
             TrainResultCheckSyncController mainCheckCtrl = new TrainResultCheckSyncController();
             // mainCheckCtrl.Add(new CheckNetworkChangeJob());
-            // mainCheckCtrl.Add(new NewUpdateControllerJob(TestCaseName, _testCtrl.GetPacker()));
+            // mainCheckCtrl.Add(new NewUpdateControllerJob(TestCaseName));
 
             // TrainResultCheckAsyncController subCheckCtrl = new TrainResultCheckAsyncController();
             // subCheckCtrl.Add(new UpdateTestCaseJob() 
